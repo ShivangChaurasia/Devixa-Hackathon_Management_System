@@ -1,0 +1,149 @@
+{
+  "info": {
+    "_postman_id": "devixa-backend-collection-v1",
+    "name": "Devixa Hackathon Platform API",
+    "description": "Production-grade Postman Collection for Devixa Backend API endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Signup Participant",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Developer\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"Password123!\",\n  \"role\": \"PARTICIPANT\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/signup", "host": ["{{baseUrl}}"], "path": ["auth", "signup"] }
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data.tokens) {",
+                  "    pm.collectionVariables.set('accessToken', jsonData.data.tokens.accessToken);",
+                  "    pm.collectionVariables.set('refreshToken', jsonData.data.tokens.refreshToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hackathons",
+      "item": [
+        {
+          "name": "List Hackathons",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/hackathons?page=1&limit=10", "host": ["{{baseUrl}}"], "path": ["hackathons"] }
+          }
+        },
+        {
+          "name": "Create Hackathon (Organizer)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Devixa AI Innovations Hackathon 2026\",\n  \"description\": \"Build next-gen AI applications\",\n  \"theme\": \"AI/ML\",\n  \"mode\": \"ONLINE\",\n  \"startDate\": \"2026-08-01T09:00:00.000Z\",\n  \"endDate\": \"2026-08-03T18:00:00.000Z\",\n  \"registrationDeadline\": \"2026-07-31T23:59:59.000Z\",\n  \"maxTeamSize\": 4\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/hackathons", "host": ["{{baseUrl}}"], "path": ["hackathons"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Gateway",
+      "item": [
+        {
+          "name": "AI Code Review",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"function add(a,b){ return a+b; }\",\n  \"language\": \"JavaScript\",\n  \"description\": \"Basic math helper function\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/ai/code-review", "host": ["{{baseUrl}}"], "path": ["ai", "code-review"] }
+          }
+        },
+        {
+          "name": "AI Generate README",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Devixa SaaS\",\n  \"description\": \"Production Hackathon Platform\",\n  \"features\": [\"State Machine\", \"AI Gateway\", \"Realtime WebSockets\"],\n  \"techStack\": [\"Node.js\", \"Express\", \"MongoDB\"]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/ai/generate-readme", "host": ["{{baseUrl}}"], "path": ["ai", "generate-readme"] }
+          }
+        }
+      ]
+    }
+  ]
+}

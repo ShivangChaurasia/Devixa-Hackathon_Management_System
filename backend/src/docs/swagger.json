@@ -1,0 +1,191 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Devixa Hackathon Management Platform API",
+    "version": "1.0.0",
+    "description": "Production-grade enterprise REST API documentation for Devixa Hackathon Platform"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api/v1",
+      "description": "Local Development Server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "summary": "Register a new user",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "name": "Jane Doe",
+                "email": "jane@example.com",
+                "password": "Password123!",
+                "role": "PARTICIPANT"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User created successfully" },
+          "400": { "description": "Validation error" },
+          "409": { "description": "Email already exists" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate user & get tokens",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "email": "jane@example.com",
+                "password": "Password123!"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login successful" },
+          "401": { "description": "Invalid credentials" }
+        }
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "summary": "Obtain new Access Token",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "refreshToken": "your_refresh_token_here"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Tokens refreshed" }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Get authenticated user profile",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": { "description": "User profile" }
+        }
+      }
+    },
+    "/hackathons": {
+      "get": {
+        "summary": "List hackathons with pagination & filters",
+        "tags": ["Hackathons"],
+        "responses": {
+          "200": { "description": "List of hackathons" }
+        }
+      },
+      "post": {
+        "summary": "Create hackathon (Organizer/Admin)",
+        "tags": ["Hackathons"],
+        "responses": {
+          "201": { "description": "Hackathon created" }
+        }
+      }
+    },
+    "/hackathons/{id}": {
+      "get": {
+        "summary": "Get hackathon details by ID",
+        "tags": ["Hackathons"],
+        "responses": {
+          "200": { "description": "Hackathon details" }
+        }
+      }
+    },
+    "/teams": {
+      "post": {
+        "summary": "Create team",
+        "tags": ["Teams"],
+        "responses": {
+          "201": { "description": "Team created" }
+        }
+      }
+    },
+    "/teams/join": {
+      "post": {
+        "summary": "Join team via invite code",
+        "tags": ["Teams"],
+        "responses": {
+          "200": { "description": "Joined team" }
+        }
+      }
+    },
+    "/submissions": {
+      "post": {
+        "summary": "Submit project",
+        "tags": ["Submissions"],
+        "responses": {
+          "201": { "description": "Project submitted" }
+        }
+      }
+    },
+    "/judging/evaluate": {
+      "post": {
+        "summary": "Submit project evaluation (Judge)",
+        "tags": ["Judging"],
+        "responses": {
+          "200": { "description": "Evaluation saved" }
+        }
+      }
+    },
+    "/leaderboard/{hackathonId}": {
+      "get": {
+        "summary": "Get hackathon live leaderboard",
+        "tags": ["Leaderboard"],
+        "responses": {
+          "200": { "description": "Leaderboard list" }
+        }
+      }
+    },
+    "/ai/code-review": {
+      "post": {
+        "summary": "Perform AI Code Review (Judge/Organizer)",
+        "tags": ["AI Gateway"],
+        "responses": {
+          "200": { "description": "AI code review" }
+        }
+      }
+    },
+    "/ai/generate-readme": {
+      "post": {
+        "summary": "Generate Markdown README using AI",
+        "tags": ["AI Gateway"],
+        "responses": {
+          "200": { "description": "Generated README" }
+        }
+      }
+    }
+  }
+}
