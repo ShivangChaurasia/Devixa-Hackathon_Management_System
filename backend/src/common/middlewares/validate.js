@@ -13,7 +13,12 @@ export const validate = (schema, source = 'body') => {
       return next(new BadRequestError('Validation failed', errorDetails));
     }
 
-    req[source] = value;
+    if (source === 'query' && req.query) {
+      Object.keys(req.query).forEach((key) => delete req.query[key]);
+      Object.assign(req.query, value);
+    } else {
+      req[source] = value;
+    }
     return next();
   };
 };
