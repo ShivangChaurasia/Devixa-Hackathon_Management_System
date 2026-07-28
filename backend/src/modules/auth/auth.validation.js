@@ -50,3 +50,11 @@ export const changePasswordSchema = Joi.object({
     'string.pattern.base': 'New password must meet complexity requirements',
   }),
 });
+
+export const googleAuthSchema = Joi.object({
+  email: Joi.string().email().required(),
+  name: Joi.string().required(),
+  avatar: Joi.string().allow(''),
+  googleId: Joi.string().required(),
+  role: Joi.string().valid('PARTICIPANT', 'ORGANIZER', 'JUDGE').default('PARTICIPANT'),
+});

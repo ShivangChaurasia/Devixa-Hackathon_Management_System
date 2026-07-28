@@ -14,6 +14,11 @@ export class AuthController {
     return ApiResponse.success(res, 'Login successful', { user, tokens });
   });
 
+  googleAuth = asyncHandler(async (req, res) => {
+    const { user, tokens } = await authService.googleLogin(req.body);
+    return ApiResponse.success(res, 'Google authentication successful', { user, tokens });
+  });
+
   refreshToken = asyncHandler(async (req, res) => {
     const { refreshToken } = req.body;
     const tokens = await authService.refreshTokens(refreshToken);

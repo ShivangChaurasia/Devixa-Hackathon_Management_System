@@ -4,6 +4,7 @@ import { validate } from '../../common/middlewares/validate.js';
 import {
   signupSchema,
   loginSchema,
+  googleAuthSchema,
   refreshTokenSchema,
   updateProfileSchema,
   changePasswordSchema,
@@ -27,6 +28,7 @@ const authLimiter = rateLimit({
 
 router.post('/signup', authLimiter, validate(signupSchema), authController.signup);
 router.post('/login', authLimiter, validate(loginSchema), authController.login);
+router.post('/google', authLimiter, validate(googleAuthSchema), authController.googleAuth);
 router.post('/refresh-token', validate(refreshTokenSchema), authController.refreshToken);
 router.post('/logout', protect, authController.logout);
 
