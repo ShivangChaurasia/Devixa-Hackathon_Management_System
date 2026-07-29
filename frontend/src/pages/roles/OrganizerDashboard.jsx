@@ -16,45 +16,69 @@ export default function OrganizerDashboard() {
   const [activeReview, setActiveReview] = useState(null);
 
   const { data: hackathonsRes, loading, execute: fetchHackathons } = useApi(apiClient.get);
+  const { data: regsRes, loading: regsLoading, execute: fetchRegistrations } = useApi(apiClient.get);
 
   useEffect(() => {
-    // Assuming backend returns organizer's hackathons here, or we fetch all and filter
     fetchHackathons('/hackathons').catch(() => null); 
-  }, [fetchHackathons]);
+    fetchRegistrations('/registrations/organizer/all').catch(() => null);
+  }, [fetchHackathons, fetchRegistrations]);
 
   const allHackathons = Array.isArray(hackathonsRes) ? hackathonsRes : (hackathonsRes?.hackathons || []);
-  // Fallback: If no dedicated organizer endpoint, we just show a few for now
-  const myHackathons = allHackathons.slice(0, 3); 
+  const myHackathons = allHackathons;
 
-  const handleApprove = (id) => {
-    alert(`Approved registration ${id}`);
+  const rawRegistrations = Array.isArray(regsRes) ? regsRes : (regsRes?.registrations || []);
+
+  const handleApprove = async (id) => {
+    try {
+      await apiClient.patch(`/registrations/${id}/status`, { status: 'APPROVED' });
+      fetchRegistrations('/registrations/organizer/all');
+    } catch (err) {
+      console.error(err);
+      alert(err.message || 'Failed to approve registration');
+    }
   };
 
-  const handleReject = (id) => {
-    alert(`Rejected registration ${id}`);
+  const handleReject = async (id) => {
+    try {
+      await apiClient.patch(`/registrations/${id}/status`, { status: 'REJECTED' });
+      fetchRegistrations('/registrations/organizer/all');
+    } catch (err) {
+      console.error(err);
+      alert(err.message || 'Failed to reject registration');
+    }
   };
 
   const registrationColumns = [
-    { header: 'Participant', accessorKey: 'user.name', cell: (row) => (
+    { header: 'Participant', accessorKey: 'userId.name', cell: (row) => (
       <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-medium">{row.user.name.charAt(0)}</div>
-        <span className="font-medium text-foreground">{row.user.name}</span>
+        <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-medium">
+          {(row.userId?.name || row.userId?.email || 'U').charAt(0).toUpperCase()}
+        </div>
+        <div>
+          <div className="font-medium text-foreground">{row.userId?.name || 'User'}</div>
+          <div className="text-xs text-foreground/40">{row.userId?.email}</div>
+        </div>
       </div>
     )},
-    { header: 'Hackathon', accessorKey: 'hackathon.title' },
-    { header: 'Experience', accessorKey: 'experienceLevel' },
+    { header: 'Hackathon', accessorKey: 'hackathonId.title', cell: (row) => row.hackathonId?.title || 'Hackathon' },
+    { header: 'Experience', accessorKey: 'experienceLevel', cell: (row) => row.experienceLevel || 'Not specified' },
+    { header: 'Status', accessorKey: 'status', cell: (row) => (
+      <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
+        row.status === 'APPROVED' ? 'bg-status-success/20 text-status-success' :
+        row.status === 'REJECTED' ? 'bg-status-error/20 text-status-error' :
+        'bg-status-warning/20 text-status-warning'
+      }`}>
+        {row.status}
+      </span>
+    )},
     { header: 'Action', cell: (row) => (
       <div className="flex gap-2">
-        <button onClick={() => handleApprove(row._id)} className="text-xs font-medium text-status-success px-3 py-1 rounded-lg bg-status-success/10 hover:bg-status-success/20 transition-colors">Approve</button>
-        <button onClick={() => setActiveReview(row)} className="text-xs font-medium text-foreground/50 px-3 py-1 rounded-lg bg-foreground/5 hover:bg-foreground/10 transition-colors">Review</button>
+        {row.status === 'PENDING' && (
+          <button onClick={() => handleApprove(row._id)} className="text-xs font-medium text-status-success px-3 py-1 rounded-lg bg-status-success/10 hover:bg-status-success/20 transition-colors">Approve</button>
+        )}
+        <button onClick={() => setActiveReview({ ...row, user: row.userId, hackathon: row.hackathonId })} className="text-xs font-medium text-foreground/50 px-3 py-1 rounded-lg bg-foreground/5 hover:bg-foreground/10 transition-colors">Review</button>
       </div>
     )},
-  ];
-
-  const pendingRegistrations = [
-    { _id: 'r1', user: { name: 'Alex Johnson', email: 'alex@example.com' }, hackathon: { title: 'Global AI Summit' }, experienceLevel: 'INTERMEDIATE', githubProfile: 'https://github.com/alexj', linkedinProfile: 'https://linkedin.com/in/alexj', motivation: 'I want to build AI models for healthcare.', status: 'PENDING' },
-    { _id: 'r2', user: { name: 'Maria Garcia', email: 'maria@example.com' }, hackathon: { title: 'Global AI Summit' }, experienceLevel: 'EXPERT', githubProfile: 'https://github.com/mariag', linkedinProfile: 'https://linkedin.com/in/mariag', motivation: 'I have 5 years of NLP experience.', status: 'PENDING' },
-    { _id: 'r3', user: { name: 'Chen Wei', email: 'chen@example.com' }, hackathon: { title: 'HealthTech for Good' }, experienceLevel: 'BEGINNER', githubProfile: 'https://github.com/chenw', linkedinProfile: 'https://linkedin.com/in/chenw', motivation: 'Looking to learn React and build something meaningful.', status: 'PENDING' },
   ];
 
   return (
@@ -126,9 +150,9 @@ export default function OrganizerDashboard() {
 
       {/* Pending Registrations */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-        <h2 className="text-lg font-semibold text-foreground mb-4">Pending Registrations</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-4">Participant Registrations</h2>
         <GlassCard className="p-0 overflow-hidden border-border bg-card/50">
-          <Table columns={registrationColumns} data={pendingRegistrations} />
+          <Table columns={registrationColumns} data={rawRegistrations} />
         </GlassCard>
       </motion.div>
 

@@ -72,6 +72,17 @@ export class RegistrationService {
 
     return await registrationRepository.updateById(registrationId, { status });
   }
+
+  async getOrganizerRegistrations(user) {
+    const hackathons = await hackathonRepository.model.find({ organizerId: user._id, deletedAt: null }).select('_id');
+    const hackathonIds = hackathons.map(h => h._id);
+    return await registrationRepository.model
+      .find({ hackathonId: { $in: hackathonIds }, deletedAt: null })
+      .populate('userId', 'name email avatar skills')
+      .populate('hackathonId', 'title')
+      .sort({ createdAt: -1 })
+      .exec();
+  }
 }
 
 export const registrationService = new RegistrationService();

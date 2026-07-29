@@ -21,8 +21,9 @@ class UserController {
   });
 
   searchUsers = asyncHandler(async (req, res) => {
-    const { q, limit, skip } = req.query;
-    const result = await userService.searchUsers(q, parseInt(limit) || 10, parseInt(skip) || 0);
+    const { q, query, role, limit, skip } = req.query;
+    const searchQuery = q || query || '';
+    const result = await userService.searchUsers(searchQuery, role, parseInt(limit) || 10, parseInt(skip) || 0);
     return ApiResponse.success(res, 'Users found', result);
   });
 

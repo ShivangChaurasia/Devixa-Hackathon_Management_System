@@ -1,6 +1,7 @@
 import { hackathonRepository } from './hackathon.repository.js';
 import { hackathonStateMachine } from './hackathon.stateMachine.js';
 import { userRepository } from '../auth/auth.repository.js';
+import { registrationRepository } from '../teams/repositories/registration.repository.js';
 import { NotFoundError, BadRequestError, ForbiddenError } from '../../common/errors/AppError.js';
 
 export class HackathonService {
@@ -18,11 +19,27 @@ export class HackathonService {
     if (!hackathon) {
       throw new NotFoundError('Hackathon not found');
     }
-    return hackathon;
+    const count = await registrationRepository.model.countDocuments({ 
+      hackathonId: id, 
+      status: { $ne: 'CANCELLED' } 
+    });
+    const hackObj = hackathon.toObject ? hackathon.toObject() : hackathon;
+    hackObj.participantsCount = count;
+    return hackObj;
   }
 
   async listHackathons(queryParams) {
-    return await hackathonRepository.findWithFilters({}, queryParams);
+    const result = await hackathonRepository.findWithFilters({}, queryParams);
+    const items = await Promise.all(result.items.map(async (h) => {
+      const count = await registrationRepository.model.countDocuments({ 
+        hackathonId: h._id, 
+        status: { $ne: 'CANCELLED' } 
+      });
+      const hObj = h.toObject ? h.toObject() : h;
+      hObj.participantsCount = count;
+      return hObj;
+    }));
+    return { ...result, items };
   }
 
   async updateHackathon(id, updateData, user) {

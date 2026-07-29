@@ -18,7 +18,7 @@ export default function Hackathons() {
     fetchHackathons('/hackathons');
   }, [fetchHackathons]);
 
-  const hackathons = Array.isArray(hackathonsRes) ? hackathonsRes : (hackathonsRes?.hackathons || []);
+  const hackathons = Array.isArray(hackathonsRes) ? hackathonsRes : (hackathonsRes?.items || hackathonsRes?.hackathons || []);
 
   const filteredHackathons = hackathons?.filter((h) => {
     const matchesSearch = h.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 

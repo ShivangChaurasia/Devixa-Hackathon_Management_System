@@ -19,7 +19,7 @@ export default function PublicHackathons() {
     fetchHackathons('/hackathons');
   }, [fetchHackathons]);
 
-  const allHackathons = Array.isArray(data) ? data : (data?.hackathons || []);
+  const allHackathons = Array.isArray(data) ? data : (data?.items || data?.hackathons || []);
 
   const filteredHackathons = allHackathons.filter((h) => {
     const matchesSearch = h.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||

@@ -24,9 +24,9 @@ export default function DashboardOverview({ user: propUser }) {
     fetchNotifs('/notifications').catch(() => {});
   }, [fetchHackathons, fetchTeams, fetchNotifs]);
 
-  const activeHackathons = Array.isArray(hackathonsRes) ? hackathonsRes : (hackathonsRes?.hackathons || []);
-  const myTeams = teamsRes?.teams || [];
-  const notifications = notifsRes?.notifications || [];
+  const activeHackathons = Array.isArray(hackathonsRes) ? hackathonsRes : (hackathonsRes?.items || hackathonsRes?.hackathons || hackathonsRes?.data || []);
+  const myTeams = Array.isArray(teamsRes) ? teamsRes : (teamsRes?.teams || teamsRes?.data || []);
+  const notifications = Array.isArray(notifsRes) ? notifsRes : (notifsRes?.notifications || notifsRes?.data || []);
 
   const pendingInvites = notifications.filter(n => n.type === 'TEAM_INVITE' && !n.read);
   

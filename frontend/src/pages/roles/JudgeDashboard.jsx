@@ -12,11 +12,13 @@ export default function JudgeDashboard() {
   const [activeEvaluation, setActiveEvaluation] = useState(null);
 
   const { data: invitesRes, loading: invitesLoading, execute: fetchInvites } = useApi(apiClient.get);
+  const { data: evalsRes, loading: evalsLoading, execute: fetchEvals } = useApi(apiClient.get);
   const [actionLoading, setActionLoading] = useState(null);
 
   useEffect(() => {
     fetchInvites('/hackathons/judging/invites').catch(() => null);
-  }, [fetchInvites]);
+    fetchEvals('/submissions').catch(() => null);
+  }, [fetchInvites, fetchEvals]);
 
   const handleInviteAction = async (hackathonId, action) => {
     setActionLoading(hackathonId);
@@ -31,11 +33,7 @@ export default function JudgeDashboard() {
   };
 
   const invites = Array.isArray(invitesRes) ? invitesRes : (invitesRes?.data || []);
-
-  const evaluations = [
-    { id: 'e1', team: 'CyberPunks', project: 'HealthTracker AI', hackathon: 'Global AI Summit', status: 'Pending', dueDate: 'Today' },
-    { id: 'e2', team: 'BlockSmiths', project: 'DeFi Wallet', hackathon: 'Web3 Builders', status: 'Completed', score: '92/100' },
-  ];
+  const evaluations = Array.isArray(evalsRes) ? evalsRes : (evalsRes?.data || evalsRes?.submissions || []);
 
   const columns = [
     { header: 'Project', accessorKey: 'project', cell: (row) => <span className="font-semibold text-foreground">{row.project}</span> },

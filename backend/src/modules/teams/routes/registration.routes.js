@@ -11,6 +11,7 @@ router.use(protect);
 router.post('/', validate(registerSchema), registrationController.register);
 router.delete('/:hackathonId', registrationController.cancel);
 router.get('/my-registrations', registrationController.getUserRegistrations);
+router.get('/organizer/all', authorize('ORGANIZER', 'ADMIN'), registrationController.getOrganizerRegistrations);
 router.get('/hackathon/:hackathonId', authorize('ORGANIZER', 'ADMIN'), registrationController.getHackathonRegistrations);
 router.patch('/:id/status', authorize('ORGANIZER', 'ADMIN'), validate(updateRegistrationStatusSchema), registrationController.updateStatus);
 

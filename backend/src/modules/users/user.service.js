@@ -1,4 +1,6 @@
 import { User } from '../auth/auth.model.js';
+import { Hackathon } from '../hackathons/hackathon.model.js';
+import { Registration } from '../teams/models/registration.model.js';
 import { NotFoundError, ConflictError, BadRequestError } from '../../common/errors/AppError.js';
 
 class UserService {
@@ -50,29 +52,74 @@ class UserService {
   }
 
   async getPublicProfile(username) {
-    const user = await User.findOne({ username }).select('name username role bio avatar githubUrl linkedinUrl socialLinks createdAt skills');
+    const user = await User.findOne({ username }).select('name username email role bio avatar githubUrl linkedinUrl socialLinks createdAt skills');
     if (!user) {
       throw new NotFoundError('User not found');
     }
-    return user;
+
+    const userObj = user.toObject();
+    let stats = {};
+    let activityList = [];
+
+    if (user.role === 'PARTICIPANT') {
+      const regs = await Registration.find({ userId: user._id, deletedAt: null })
+        .populate('hackathonId', 'title bannerImage status startDate endDate')
+        .lean();
+      stats = {
+        hackathonsParticipated: regs.length,
+        approvedRegistrations: regs.filter(r => r.status === 'APPROVED').length,
+      };
+      activityList = regs.map(r => r.hackathonId).filter(Boolean);
+    } else if (user.role === 'ORGANIZER') {
+      const hackathons = await Hackathon.find({ organizerId: user._id, deletedAt: null })
+        .select('title bannerImage status startDate endDate mode')
+        .lean();
+      const totalParticipants = await Registration.countDocuments({
+        hackathonId: { $in: hackathons.map(h => h._id) },
+        deletedAt: null
+      });
+      stats = {
+        hackathonsOrganized: hackathons.length,
+        totalParticipantsHosted: totalParticipants,
+      };
+      activityList = hackathons;
+    } else if (user.role === 'JUDGE') {
+      const hackathons = await Hackathon.find({ judges: user._id, deletedAt: null })
+        .select('title bannerImage status startDate endDate mode')
+        .lean();
+      stats = {
+        hackathonsJudged: hackathons.length,
+      };
+      activityList = hackathons;
+    }
+
+    return { ...userObj, stats, activityList };
   }
 
-  async searchUsers(query, limit = 10, skip = 0) {
-    if (!query) return { users: [], total: 0 };
+  async searchUsers(query, role = null, limit = 10, skip = 0) {
+    if (!query && !role) return { users: [], total: 0 };
     
-    const searchRegex = new RegExp(query, 'i');
     const filter = {
-      $or: [
-        { name: searchRegex },
-        { username: searchRegex }
-      ],
       isOnboarded: true,
       status: 'ACTIVE'
     };
 
+    if (query) {
+      const searchRegex = new RegExp(query, 'i');
+      filter.$or = [
+        { name: searchRegex },
+        { username: searchRegex },
+        { email: searchRegex }
+      ];
+    }
+
+    if (role) {
+      filter.role = role.toUpperCase();
+    }
+
     const [users, total] = await Promise.all([
       User.find(filter)
-        .select('name username role avatar bio')
+        .select('name username email role avatar bio skills')
         .limit(limit)
         .skip(skip)
         .lean(),

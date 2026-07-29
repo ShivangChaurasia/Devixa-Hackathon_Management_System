@@ -114,26 +114,46 @@ export default function PublicProfile() {
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Left Column (Stats & Skills) */}
+          {/* Left Column (Role-Specific Stats & Skills) */}
           <div className="space-y-8">
             <GlassCard className="p-6">
               <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
                 <Activity size={18} className="text-accent-start" />
-                Platform Activity
+                {profile.role === 'ORGANIZER' ? 'Organizer Stats' : profile.role === 'JUDGE' ? 'Judge Activity' : 'Participant Metrics'}
               </h3>
               <div className="space-y-4">
-                <div className="flex justify-between items-center p-3 bg-foreground/5 rounded-xl border border-foreground/5">
-                  <span className="text-foreground/70 text-sm">Hackathons Attended</span>
-                  <span className="text-foreground font-bold text-lg">0</span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-foreground/5 rounded-xl border border-foreground/5">
-                  <span className="text-foreground/70 text-sm">Projects Submitted</span>
-                  <span className="text-foreground font-bold text-lg">0</span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-foreground/5 rounded-xl border border-foreground/5">
-                  <span className="text-foreground/70 text-sm">Teams Joined</span>
-                  <span className="text-foreground font-bold text-lg">0</span>
-                </div>
+                {profile.role === 'ORGANIZER' && (
+                  <>
+                    <div className="flex justify-between items-center p-3 bg-foreground/5 rounded-xl border border-foreground/5">
+                      <span className="text-foreground/70 text-sm">Hackathons Organized</span>
+                      <span className="text-foreground font-bold text-lg">{profile.stats?.hackathonsOrganized || 0}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-foreground/5 rounded-xl border border-foreground/5">
+                      <span className="text-foreground/70 text-sm">Total Audience Hosted</span>
+                      <span className="text-accent-start font-bold text-lg">{profile.stats?.totalParticipantsHosted || 0}</span>
+                    </div>
+                  </>
+                )}
+
+                {profile.role === 'JUDGE' && (
+                  <div className="flex justify-between items-center p-3 bg-foreground/5 rounded-xl border border-foreground/5">
+                    <span className="text-foreground/70 text-sm">Events Supervised & Judged</span>
+                    <span className="text-accent-start font-bold text-lg">{profile.stats?.hackathonsJudged || 0}</span>
+                  </div>
+                )}
+
+                {profile.role === 'PARTICIPANT' && (
+                  <>
+                    <div className="flex justify-between items-center p-3 bg-foreground/5 rounded-xl border border-foreground/5">
+                      <span className="text-foreground/70 text-sm">Hackathons Entered</span>
+                      <span className="text-foreground font-bold text-lg">{profile.stats?.hackathonsParticipated || 0}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-foreground/5 rounded-xl border border-foreground/5">
+                      <span className="text-foreground/70 text-sm">Approved Applications</span>
+                      <span className="text-status-success font-bold text-lg">{profile.stats?.approvedRegistrations || 0}</span>
+                    </div>
+                  </>
+                )}
               </div>
             </GlassCard>
 
@@ -156,31 +176,42 @@ export default function PublicProfile() {
             </GlassCard>
           </div>
 
-          {/* Right Column (Achievements & Projects) */}
+          {/* Right Column (Role-Specific Activity History) */}
           <div className="lg:col-span-2 space-y-8">
-            <GlassCard className="p-6 min-h-[200px]">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                  <Trophy size={18} className="text-accent-start" />
-                  Achievements
-                </h3>
-              </div>
-              <div className="flex flex-col items-center justify-center h-40 text-foreground/30">
-                <Trophy size={32} className="mb-2 opacity-50" />
-                <p className="text-sm">No achievements unlocked yet.</p>
-              </div>
-            </GlassCard>
-
             <GlassCard className="p-6 min-h-[300px]">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                  <ExternalLink size={18} className="text-accent-start" />
-                  Recent Projects
+                  <Trophy size={18} className="text-accent-start" />
+                  {profile.role === 'ORGANIZER' ? 'Hosted Hackathons' : profile.role === 'JUDGE' ? 'Judged Events' : 'Participated Events'}
                 </h3>
               </div>
-              <div className="flex flex-col items-center justify-center h-48 text-foreground/30">
-                <p className="text-sm">No public projects available.</p>
-              </div>
+
+              {profile.activityList && profile.activityList.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {profile.activityList.map((item, idx) => (
+                    <Link key={item._id || idx} to={`/app/hackathons/${item._id}`} className="block group">
+                      <div className="p-4 rounded-xl bg-background border border-border group-hover:border-accent-start/50 transition-all flex flex-col justify-between h-full">
+                        <div>
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-accent-start/10 text-accent-start">
+                              {item.status || 'ACTIVE'}
+                            </span>
+                          </div>
+                          <h4 className="font-bold text-foreground group-hover:text-accent-start transition-colors">{item.title}</h4>
+                        </div>
+                        <div className="text-xs text-foreground/40 mt-4 pt-3 border-t border-border flex items-center gap-1">
+                          <Calendar size={12} /> {item.startDate ? new Date(item.startDate).toLocaleDateString() : 'Active'}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-48 text-foreground/30">
+                  <Trophy size={32} className="mb-2 opacity-50" />
+                  <p className="text-sm">No activity records found for this {profile.role?.toLowerCase() || 'user'}.</p>
+                </div>
+              )}
             </GlassCard>
           </div>
 

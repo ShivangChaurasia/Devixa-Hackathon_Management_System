@@ -42,6 +42,11 @@ export class TeamController {
     await teamService.deleteTeam(req.params.id, req.user._id);
     return ApiResponse.success(res, 'Team disbanded successfully');
   });
+
+  getMyTeams = asyncHandler(async (req, res) => {
+    const teams = await teamService.getUserTeams(req.user._id);
+    return ApiResponse.success(res, 'User teams retrieved successfully', { teams });
+  });
 }
 
 export const teamController = new TeamController();

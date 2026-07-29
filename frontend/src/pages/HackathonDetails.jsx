@@ -13,11 +13,17 @@ export default function HackathonDetails() {
   const navigate = useNavigate();
   const { data: hackathonRes, loading, error, execute: fetchHackathon } = useApi(apiClient.get);
 
+  const { data: myRegsRes, execute: fetchMyRegs } = useApi(apiClient.get);
+
   useEffect(() => {
     fetchHackathon(`/hackathons/${id}`);
-  }, [id, fetchHackathon]);
+    fetchMyRegs('/registrations/my-registrations').catch(() => null);
+  }, [id, fetchHackathon, fetchMyRegs]);
 
-  const hackathon = hackathonRes?.hackathon || hackathonRes?.data;
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const hackathon = hackathonRes?.hackathon || hackathonRes?.data || hackathonRes;
+  const myRegs = Array.isArray(myRegsRes) ? myRegsRes : (myRegsRes?.registrations || []);
+  const isUserRegistered = myRegs.some(r => (r.hackathonId?._id || r.hackathonId) === (hackathon?._id || id));
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [registerLoading, setRegisterLoading] = useState(false);
@@ -106,8 +112,19 @@ export default function HackathonDetails() {
           </div>
         </div>
         
-        {registerSuccess ? (
-          <div className="flex items-center gap-2 text-status-success font-semibold px-6 py-4 bg-status-success/10 rounded-xl">
+        {user?.role === 'JUDGE' ? (
+          <div className="flex items-center gap-2 text-accent-start font-semibold px-6 py-4 bg-accent-start/10 rounded-xl border border-accent-start/20">
+            <Trophy size={20} /> Assigned Judge Panel
+          </div>
+        ) : user?.role === 'ORGANIZER' ? (
+          <GradientButton 
+            onClick={() => navigate('/app/organizer/dashboard')}
+            className="w-full md:w-auto text-lg px-12 py-4"
+          >
+            Organizer Dashboard
+          </GradientButton>
+        ) : registerSuccess || isUserRegistered ? (
+          <div className="flex items-center gap-2 text-status-success font-semibold px-6 py-4 bg-status-success/10 rounded-xl border border-status-success/20">
             <CheckCircle2 size={20} /> Application Submitted!
           </div>
         ) : (

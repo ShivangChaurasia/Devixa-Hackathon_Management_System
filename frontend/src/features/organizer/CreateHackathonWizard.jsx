@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { apiClient } from '../../services/apiClient';
+import JudgeMentionInput from '../../components/ui/JudgeMentionInput';
 
 export default function CreateHackathonWizard() {
   const navigate = useNavigate();
@@ -221,9 +222,13 @@ export default function CreateHackathonWizard() {
                 </div>
                 
                 <div className="space-y-2 pt-2">
-                  <label className="text-sm font-medium text-foreground/70">Invite Judges</label>
-                  <p className="text-xs text-foreground/50">Enter email addresses separated by commas to invite judges to evaluate this hackathon.</p>
-                  <textarea name="judgeEmails" value={formData.judgeEmails} onChange={handleChange} rows={2} placeholder="judge1@example.com, judge2@example.com" className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:border-accent-start outline-none transition-colors resize-none" />
+                  <label className="text-sm font-medium text-foreground/70">Invite Judges (@mention Search)</label>
+                  <p className="text-xs text-foreground/50">Search judges by name or email to auto-complete, or type manually and press Enter.</p>
+                  <JudgeMentionInput
+                    selectedEmails={formData.judgeEmails ? formData.judgeEmails.split(',').map(s => s.trim()).filter(Boolean) : []}
+                    onChange={(newList) => setFormData(prev => ({ ...prev, judgeEmails: newList.join(', ') }))}
+                    placeholder="Type @username, name, or email..."
+                  />
                 </div>
 
                 <div className="space-y-2 pt-2 border-t border-border mt-4">

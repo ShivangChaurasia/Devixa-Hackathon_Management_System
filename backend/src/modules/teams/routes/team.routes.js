@@ -15,6 +15,7 @@ router.use(protect);
 
 router.post('/', validate(createTeamSchema), teamController.create);
 router.post('/join', validate(joinTeamSchema), teamController.join);
+router.get('/my-teams', teamController.getMyTeams);
 router.get('/:id', teamController.getById);
 router.get('/hackathon/:hackathonId', teamController.listByHackathon);
 router.post('/:id/leave', teamController.leave);

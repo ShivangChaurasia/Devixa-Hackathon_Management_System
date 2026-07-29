@@ -1,5 +1,4 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 // Devixa Web App Firebase Configuration
@@ -15,14 +14,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-let analytics = null;
-if (typeof window !== "undefined") {
-  try {
-    analytics = getAnalytics(app);
-  } catch (err) {
-    console.warn("Firebase analytics not supported in current environment");
-  }
-}
 
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();

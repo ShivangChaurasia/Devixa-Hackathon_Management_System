@@ -212,6 +212,14 @@ export class TeamService {
 
     return await teamRepository.softDelete(teamId);
   }
+
+  async getUserTeams(userId) {
+    return await teamRepository.model
+      .find({ members: userId, deletedAt: null })
+      .populate('hackathonId')
+      .populate('members', 'name email avatar')
+      .exec();
+  }
 }
 
 export const teamService = new TeamService();

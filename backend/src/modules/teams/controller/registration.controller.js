@@ -31,6 +31,11 @@ export class RegistrationController {
     );
     return ApiResponse.success(res, `Registration status updated to '${req.body.status}'`, { registration });
   });
+
+  getOrganizerRegistrations = asyncHandler(async (req, res) => {
+    const registrations = await registrationService.getOrganizerRegistrations(req.user);
+    return ApiResponse.success(res, 'Organizer registrations retrieved', { registrations });
+  });
 }
 
 export const registrationController = new RegistrationController();
