@@ -25,6 +25,8 @@ export const createHackathonSchema = Joi.object({
   maxTeamSize: Joi.number().min(Joi.ref('minTeamSize')).max(10).default(4),
   rules: Joi.array().items(Joi.string()).default([]),
   judgingCriteria: Joi.array().items(judgingCriterionSchema),
+  pendingJudgeEmails: Joi.array().items(Joi.string().email()).default([]),
+  status: Joi.string().valid('DRAFT', 'UPCOMING', 'REGISTRATION_OPEN', 'ONGOING', 'COMPLETED', 'CANCELLED').default('DRAFT'),
 });
 
 export const updateHackathonSchema = Joi.object({
@@ -42,6 +44,7 @@ export const updateHackathonSchema = Joi.object({
   maxTeamSize: Joi.number().max(10),
   rules: Joi.array().items(Joi.string()),
   judgingCriteria: Joi.array().items(judgingCriterionSchema),
+  pendingJudgeEmails: Joi.array().items(Joi.string().email()),
 });
 
 export const updateStatusSchema = Joi.object({

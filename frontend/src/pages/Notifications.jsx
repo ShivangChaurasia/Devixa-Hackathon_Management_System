@@ -48,7 +48,7 @@ export default function Notifications() {
         subtitle={loading ? "Loading..." : `${unreadCount} unread notification${unreadCount !== 1 ? 's' : ''}`}
         action={
           unreadCount > 0 && (
-            <button onClick={markAllRead} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-border hover:bg-white/10 text-sm font-medium text-white/60 hover:text-white transition-colors">
+            <button onClick={markAllRead} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-foreground/5 border border-border hover:bg-foreground/10 text-sm font-medium text-foreground/60 hover:text-foreground transition-colors">
               <Check size={16} /> Mark all read
             </button>
           )
@@ -64,7 +64,7 @@ export default function Notifications() {
             className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors ${
               activeCategory === cat
                 ? 'bg-accent-start/20 text-accent-start border border-accent-start/30'
-                : 'bg-white/5 text-white/50 border border-border hover:text-white hover:bg-white/10'
+                : 'bg-foreground/5 text-foreground/50 border border-border hover:text-foreground hover:bg-foreground/10'
             }`}
           >
             {cat}
@@ -88,16 +88,16 @@ export default function Notifications() {
                 hover={false}
                 className={`flex items-start gap-4 cursor-pointer transition-colors ${!note.read ? 'border-accent-start/20 bg-accent-start/[0.03]' : ''}`}
               >
-                <div className={`mt-1 w-2.5 h-2.5 rounded-full shrink-0 ${!note.read ? 'bg-accent-start' : 'bg-white/10'}`} />
+                <div className={`mt-1 w-2.5 h-2.5 rounded-full shrink-0 ${!note.read ? 'bg-accent-start' : 'bg-foreground/10'}`} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h4 className="text-sm font-semibold text-white">{note.title || 'Notification'}</h4>
-                      <p className="text-sm text-white/60 mt-1">{note.message}</p>
+                      <h4 className="text-sm font-semibold text-foreground">{note.title || 'Notification'}</h4>
+                      <p className="text-sm text-foreground/60 mt-1">{note.message}</p>
                     </div>
-                    <span className="text-xs text-white/30 whitespace-nowrap shrink-0">{note.createdAt ? new Date(note.createdAt).toLocaleDateString() : note.time}</span>
+                    <span className="text-xs text-foreground/30 whitespace-nowrap shrink-0">{note.createdAt ? new Date(note.createdAt).toLocaleDateString() : note.time}</span>
                   </div>
-                  <span className="inline-block mt-2 px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wider bg-white/5 text-white/40">{note.type || note.category || 'System'}</span>
+                  <span className="inline-block mt-2 px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wider bg-foreground/5 text-foreground/40">{note.type || note.category || 'System'}</span>
                 </div>
               </GlassCard>
             </motion.div>

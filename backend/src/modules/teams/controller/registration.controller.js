@@ -4,7 +4,7 @@ import { asyncHandler } from '../../../common/middlewares/asyncHandler.js';
 
 export class RegistrationController {
   register = asyncHandler(async (req, res) => {
-    const registration = await registrationService.registerForHackathon(req.user._id, req.body.hackathonId);
+    const registration = await registrationService.registerForHackathon(req.user._id, req.body);
     return ApiResponse.created(res, 'Registered for hackathon successfully', { registration });
   });
 

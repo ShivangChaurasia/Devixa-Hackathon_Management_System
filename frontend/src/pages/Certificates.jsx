@@ -48,20 +48,20 @@ export default function Certificates() {
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-semibold text-white mb-1">{cert.type || 'Certificate of Participation'}</h3>
-                  <p className="text-sm text-white/50 mb-1">{cert.hackathon?.title || 'Hackathon'}</p>
-                  <p className="text-xs text-white/30">Issued by {cert.hackathon?.organization || 'Organization'} • {cert.issuedAt ? new Date(cert.issuedAt).toLocaleDateString() : new Date().toLocaleDateString()}</p>
+                  <h3 className="text-lg font-semibold text-foreground mb-1">{cert.type || 'Certificate of Participation'}</h3>
+                  <p className="text-sm text-foreground/50 mb-1">{cert.hackathon?.title || 'Hackathon'}</p>
+                  <p className="text-xs text-foreground/30">Issued by {cert.hackathon?.organization || 'Organization'} • {cert.issuedAt ? new Date(cert.issuedAt).toLocaleDateString() : new Date().toLocaleDateString()}</p>
 
                   <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs text-white/40">
+                    <div className="flex items-center gap-2 text-xs text-foreground/40">
                       <QrCode size={14} />
                       <span className="font-mono">{cert.verificationCode || cert._id?.slice(-8).toUpperCase() || 'VER-XXXX'}</span>
                     </div>
                     <div className="flex gap-2">
-                      <button className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-colors" title="Download">
+                      <button className="p-2 rounded-lg bg-foreground/5 hover:bg-foreground/10 text-foreground/50 hover:text-foreground transition-colors" title="Download">
                         <Download size={16} />
                       </button>
-                      <button className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-colors" title="Share">
+                      <button className="p-2 rounded-lg bg-foreground/5 hover:bg-foreground/10 text-foreground/50 hover:text-foreground transition-colors" title="Share">
                         <Share2 size={16} />
                       </button>
                     </div>

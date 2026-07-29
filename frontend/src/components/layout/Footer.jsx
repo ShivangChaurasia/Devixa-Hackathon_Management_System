@@ -9,56 +9,56 @@ export default function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-accent-start to-accent-end flex items-center justify-center font-bold text-white shadow-lg">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-accent-start to-accent-end flex items-center justify-center font-bold text-foreground shadow-lg">
                 D
               </div>
-              <span className="font-bold text-xl text-white">Devixa</span>
+              <span className="font-bold text-xl text-foreground">Devixa</span>
             </div>
-            <p className="text-sm text-white/50 leading-relaxed">
+            <p className="text-sm text-foreground/50 leading-relaxed">
               The enterprise-grade hackathon management platform for universities, companies, and communities.
             </p>
           </div>
 
           {/* Product */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-4">Product</h4>
+            <h4 className="text-sm font-semibold text-foreground mb-4">Product</h4>
             <ul className="space-y-3">
-              <li><NavLink to="/hackathons" className="text-sm text-white/50 hover:text-white transition-colors">Browse Hackathons</NavLink></li>
-              <li><NavLink to="/auth" className="text-sm text-white/50 hover:text-white transition-colors">For Organizers</NavLink></li>
-              <li><NavLink to="/auth" className="text-sm text-white/50 hover:text-white transition-colors">For Judges</NavLink></li>
-              <li><NavLink to="/auth" className="text-sm text-white/50 hover:text-white transition-colors">Pricing</NavLink></li>
+              <li><NavLink to="/hackathons" className="text-sm text-foreground/50 hover:text-foreground transition-colors">Browse Hackathons</NavLink></li>
+              <li><NavLink to="/auth" className="text-sm text-foreground/50 hover:text-foreground transition-colors">For Organizers</NavLink></li>
+              <li><NavLink to="/auth" className="text-sm text-foreground/50 hover:text-foreground transition-colors">For Judges</NavLink></li>
+              <li><NavLink to="/auth" className="text-sm text-foreground/50 hover:text-foreground transition-colors">Pricing</NavLink></li>
             </ul>
           </div>
 
           {/* Resources */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-4">Resources</h4>
+            <h4 className="text-sm font-semibold text-foreground mb-4">Resources</h4>
             <ul className="space-y-3">
-              <li><span className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer">Documentation</span></li>
-              <li><span className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer">API Reference</span></li>
-              <li><span className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer">Blog</span></li>
-              <li><span className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer">Changelog</span></li>
+              <li><span className="text-sm text-foreground/50 hover:text-foreground transition-colors cursor-pointer">Documentation</span></li>
+              <li><span className="text-sm text-foreground/50 hover:text-foreground transition-colors cursor-pointer">API Reference</span></li>
+              <li><span className="text-sm text-foreground/50 hover:text-foreground transition-colors cursor-pointer">Blog</span></li>
+              <li><span className="text-sm text-foreground/50 hover:text-foreground transition-colors cursor-pointer">Changelog</span></li>
             </ul>
           </div>
 
           {/* Company */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-4">Company</h4>
+            <h4 className="text-sm font-semibold text-foreground mb-4">Company</h4>
             <ul className="space-y-3">
-              <li><span className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer">About</span></li>
-              <li><span className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer">Careers</span></li>
-              <li><span className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer">Contact</span></li>
-              <li><span className="text-sm text-white/50 hover:text-white transition-colors cursor-pointer">Privacy Policy</span></li>
+              <li><span className="text-sm text-foreground/50 hover:text-foreground transition-colors cursor-pointer">About</span></li>
+              <li><span className="text-sm text-foreground/50 hover:text-foreground transition-colors cursor-pointer">Careers</span></li>
+              <li><span className="text-sm text-foreground/50 hover:text-foreground transition-colors cursor-pointer">Contact</span></li>
+              <li><span className="text-sm text-foreground/50 hover:text-foreground transition-colors cursor-pointer">Privacy Policy</span></li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-white/40">&copy; {new Date().getFullYear()} Devixa. All rights reserved.</p>
+          <p className="text-sm text-foreground/40">&copy; {new Date().getFullYear()} Devixa. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <span className="text-sm text-white/40 hover:text-white transition-colors cursor-pointer">Terms</span>
-            <span className="text-sm text-white/40 hover:text-white transition-colors cursor-pointer">Privacy</span>
-            <span className="text-sm text-white/40 hover:text-white transition-colors cursor-pointer">Status</span>
+            <span className="text-sm text-foreground/40 hover:text-foreground transition-colors cursor-pointer">Terms</span>
+            <span className="text-sm text-foreground/40 hover:text-foreground transition-colors cursor-pointer">Privacy</span>
+            <span className="text-sm text-foreground/40 hover:text-foreground transition-colors cursor-pointer">Status</span>
           </div>
         </div>
       </div>

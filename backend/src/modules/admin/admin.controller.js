@@ -27,6 +27,23 @@ export class AdminController {
     return ApiResponse.success(res, `User role updated to '${role}'`, { user });
   });
 
+  listHackathons = asyncHandler(async (req, res) => {
+    const hackathons = await adminService.listHackathons(req.query);
+    return ApiResponse.success(res, 'Hackathon directory retrieved', { hackathons });
+  });
+
+  setHackathonStatus = asyncHandler(async (req, res) => {
+    const { hackathonId } = req.params;
+    const { status } = req.body;
+    const hackathon = await adminService.setHackathonStatus(hackathonId, status);
+    return ApiResponse.success(res, `Hackathon status updated to '${status}'`, { hackathon });
+  });
+
+  listSubmissions = asyncHandler(async (req, res) => {
+    const submissions = await adminService.listSubmissions(req.query);
+    return ApiResponse.success(res, 'Submissions retrieved', { submissions });
+  });
+
   generateCertificate = asyncHandler(async (req, res) => {
     const { hackathonId, userId } = req.params;
     const certificate = await adminService.generateCertificate(hackathonId, userId);

@@ -31,10 +31,10 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
           >
             <GlassCard hover={false} className="shadow-2xl">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-white tracking-tight">{title}</h2>
+                <h2 className="text-xl font-semibold text-foreground tracking-tight">{title}</h2>
                 <button 
                   onClick={onClose}
-                  className="p-1 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors"
+                  className="p-1 rounded-lg text-foreground/50 hover:text-foreground hover:bg-foreground/10 transition-colors"
                 >
                   <X size={20} />
                 </button>

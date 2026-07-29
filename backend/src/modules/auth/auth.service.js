@@ -47,6 +47,7 @@ export class AuthService {
       throw new ForbiddenError('ADMIN accounts cannot be created via public registration');
     }
 
+    userData.provider = 'EMAIL';
     const user = await userRepository.create(userData);
 
     const tokens = this.generateTokens(user);
@@ -72,6 +73,7 @@ export class AuthService {
         email,
         password: randomPassword,
         avatar: avatar || '',
+        provider: 'GOOGLE',
         role: ['shiva17ng@gmail.com'].includes(email) ? 'ADMIN' : (role === 'ADMIN' ? 'PARTICIPANT' : role),
         isEmailVerified: true,
       });

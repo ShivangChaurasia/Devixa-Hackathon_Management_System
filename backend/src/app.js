@@ -13,6 +13,7 @@ import { setupSwagger } from './config/swagger.config.js';
 
 // Route Imports
 import authRoutes from './modules/auth/auth.routes.js';
+import userRoutes from './modules/users/user.routes.js';
 import aiRoutes from './modules/ai/routes/aiRoutes.js';
 import hackathonRoutes from './modules/hackathons/hackathon.routes.js';
 import registrationRoutes from './modules/teams/routes/registration.routes.js';
@@ -57,6 +58,7 @@ app.get('/health', (req, res) => {
 
 // API Routes (v1)
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/ai', aiRoutes);
 app.use('/api/v1/hackathons', hackathonRoutes);
 app.use('/api/v1/registrations', registrationRoutes);

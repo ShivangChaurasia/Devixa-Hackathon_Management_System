@@ -23,7 +23,7 @@ export default function TeamManagement() {
   const team = teamRes?.team;
 
   if (loading) return <div className="p-20 text-center"><div className="w-8 h-8 mx-auto border-4 border-accent-start/30 border-t-accent-start rounded-full animate-spin"></div></div>;
-  if (!team) return <div className="p-20 text-center text-white/50">Team not found.</div>;
+  if (!team) return <div className="p-20 text-center text-foreground/50">Team not found.</div>;
 
   return (
     <div className="space-y-6">
@@ -44,7 +44,7 @@ export default function TeamManagement() {
              key={tab.id}
              onClick={() => setActiveTab(tab.id)}
              className={`flex items-center gap-2 pb-4 text-sm font-medium transition-colors border-b-2 ${
-               activeTab === tab.id ? 'border-accent-start text-white' : 'border-transparent text-white/50 hover:text-white hover:border-white/20'
+               activeTab === tab.id ? 'border-accent-start text-foreground' : 'border-transparent text-foreground/50 hover:text-foreground hover:border-foreground/20'
              }`}
            >
              <tab.icon size={16} className={activeTab === tab.id ? 'text-accent-start' : ''} />
@@ -72,8 +72,8 @@ function MembersTab({ members }) {
       accessorKey: 'name',
       cell: (row) => (
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs font-medium">{(row.user?.name || row.name || 'U').charAt(0)}</div>
-          <span className="font-medium text-white">{row.user?.name || row.name}</span>
+          <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-medium">{(row.user?.name || row.name || 'U').charAt(0)}</div>
+          <span className="font-medium text-foreground">{row.user?.name || row.name}</span>
         </div>
       ),
     },
@@ -81,7 +81,7 @@ function MembersTab({ members }) {
       header: 'Role',
       accessorKey: 'role',
       cell: (row) => (
-        <span className="flex items-center gap-1.5 px-2 py-1 bg-white/5 border border-white/10 rounded-lg text-xs w-fit">
+        <span className="flex items-center gap-1.5 px-2 py-1 bg-foreground/5 border border-foreground/10 rounded-lg text-xs w-fit">
           {row.role === 'Leader' && <Shield size={12} className="text-accent-start" />}
           {row.role}
         </span>
@@ -100,7 +100,7 @@ function MembersTab({ members }) {
       header: 'Actions',
       accessorKey: 'id',
       cell: (row) => (
-        <button className="p-2 text-white/40 hover:text-status-error hover:bg-status-error/10 rounded-lg transition-colors">
+        <button className="p-2 text-foreground/40 hover:text-status-error hover:bg-status-error/10 rounded-lg transition-colors">
           <X size={16} />
         </button>
       ),
@@ -111,12 +111,12 @@ function MembersTab({ members }) {
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <div className="relative flex-1 max-w-md flex items-center">
-          <div className="absolute left-4 text-white/40"><Mail size={18} /></div>
-          <input type="email" placeholder="Invite member by email..." className="w-full bg-card border border-border rounded-xl pl-12 pr-32 py-3 text-sm text-white focus:border-accent-start outline-none" />
-          <button className="absolute right-2 px-4 py-1.5 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-lg transition-colors">Send Invite</button>
+          <div className="absolute left-4 text-foreground/40"><Mail size={18} /></div>
+          <input type="email" placeholder="Invite member by email..." className="w-full bg-card border border-border rounded-xl pl-12 pr-32 py-3 text-sm text-foreground focus:border-accent-start outline-none" />
+          <button className="absolute right-2 px-4 py-1.5 bg-foreground/10 hover:bg-foreground/20 text-foreground text-sm font-medium rounded-lg transition-colors">Send Invite</button>
         </div>
         <div className="flex gap-2">
-          <button className="flex items-center gap-2 px-4 py-3 rounded-xl bg-card border border-border text-white/70 hover:text-white transition-colors text-sm font-medium">
+          <button className="flex items-center gap-2 px-4 py-3 rounded-xl bg-card border border-border text-foreground/70 hover:text-foreground transition-colors text-sm font-medium">
             <LinkIcon size={16} /> Copy Invite Link
           </button>
         </div>
@@ -131,24 +131,24 @@ function ChatTab() {
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
       <GlassCard className="h-[500px] flex flex-col p-0 overflow-hidden border-border bg-card/50">
         <div className="flex-1 p-6 overflow-y-auto flex flex-col justify-end space-y-4">
-          <div className="text-center text-xs text-white/30 uppercase tracking-wider mb-4">Today</div>
+          <div className="text-center text-xs text-foreground/30 uppercase tracking-wider mb-4">Today</div>
           <div className="flex gap-3">
-             <div className="w-8 h-8 rounded-full bg-white/10 shrink-0 mt-1" />
-             <div className="bg-white/5 border border-border rounded-2xl rounded-tl-none p-3 max-w-[80%]">
+             <div className="w-8 h-8 rounded-full bg-foreground/10 shrink-0 mt-1" />
+             <div className="bg-foreground/5 border border-border rounded-2xl rounded-tl-none p-3 max-w-[80%]">
                <p className="text-xs text-accent-start mb-1 font-medium">Sarah</p>
-               <p className="text-sm text-white/80">I just updated the database schema. Can someone review?</p>
+               <p className="text-sm text-foreground/80">I just updated the database schema. Can someone review?</p>
              </div>
           </div>
           <div className="flex gap-3 flex-row-reverse">
              <div className="bg-accent-start/20 border border-accent-start/30 rounded-2xl rounded-tr-none p-3 max-w-[80%]">
-               <p className="text-sm text-white/90">Looks good! I'll connect the API endpoints now.</p>
+               <p className="text-sm text-foreground/90">Looks good! I'll connect the API endpoints now.</p>
              </div>
           </div>
         </div>
         <div className="p-4 border-t border-border bg-card">
           <div className="relative">
-            <input type="text" placeholder="Message your team..." className="w-full bg-background border border-border rounded-xl pl-4 pr-12 py-3 text-sm text-white focus:border-accent-start outline-none" />
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-white/40 hover:text-accent-start transition-colors"><Send size={18} /></button>
+            <input type="text" placeholder="Message your team..." className="w-full bg-background border border-border rounded-xl pl-4 pr-12 py-3 text-sm text-foreground focus:border-accent-start outline-none" />
+            <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-foreground/40 hover:text-accent-start transition-colors"><Send size={18} /></button>
           </div>
         </div>
       </GlassCard>
@@ -159,19 +159,19 @@ function ChatTab() {
 function FilesTab() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-      <div className="border-2 border-dashed border-border rounded-2xl p-10 text-center hover:bg-white/[0.02] transition-colors cursor-pointer mb-6">
-        <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4 text-white/50">
+      <div className="border-2 border-dashed border-border rounded-2xl p-10 text-center hover:bg-foreground/[0.02] transition-colors cursor-pointer mb-6">
+        <div className="w-12 h-12 rounded-full bg-foreground/5 flex items-center justify-center mx-auto mb-4 text-foreground/50">
           <UploadCloud size={24} />
         </div>
-        <h3 className="text-white font-medium mb-1">Upload Files</h3>
-        <p className="text-sm text-white/50">Drag and drop architecture diagrams, assets, or pitch decks.</p>
+        <h3 className="text-foreground font-medium mb-1">Upload Files</h3>
+        <p className="text-sm text-foreground/50">Drag and drop architecture diagrams, assets, or pitch decks.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <GlassCard className="flex items-center gap-4 p-4 cursor-pointer hover:bg-white/[0.02]">
+        <GlassCard className="flex items-center gap-4 p-4 cursor-pointer hover:bg-foreground/[0.02]">
           <div className="p-3 rounded-lg bg-status-info/10 text-status-info"><FileText size={20} /></div>
           <div className="flex-1">
-            <h4 className="text-sm font-medium text-white mb-0.5">System_Architecture.pdf</h4>
-            <p className="text-xs text-white/40">Added by Sarah • 2.4 MB</p>
+            <h4 className="text-sm font-medium text-foreground mb-0.5">System_Architecture.pdf</h4>
+            <p className="text-xs text-foreground/40">Added by Sarah • 2.4 MB</p>
           </div>
         </GlassCard>
       </div>
@@ -183,8 +183,8 @@ function TasksTab() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
       <div className="flex gap-4 items-center justify-between mb-6">
-         <h3 className="font-semibold text-white">To-Do List</h3>
-         <button className="px-4 py-2 bg-white/5 border border-border rounded-lg text-sm text-white hover:bg-white/10 transition-colors">+ Add Task</button>
+         <h3 className="font-semibold text-foreground">To-Do List</h3>
+         <button className="px-4 py-2 bg-foreground/5 border border-border rounded-lg text-sm text-foreground hover:bg-foreground/10 transition-colors">+ Add Task</button>
       </div>
       <div className="space-y-3">
         {[
@@ -193,11 +193,11 @@ function TasksTab() {
           { text: "Integrate Devixa APIs", done: false },
           { text: "Record demo video", done: false },
         ].map((task, i) => (
-          <div key={i} className={`flex items-center gap-3 p-4 rounded-xl border ${task.done ? 'bg-white/[0.02] border-transparent' : 'bg-card border-border'} transition-colors`}>
-            <div className={`w-5 h-5 rounded border flex items-center justify-center ${task.done ? 'bg-accent-start border-accent-start text-white' : 'border-white/20'}`}>
+          <div key={i} className={`flex items-center gap-3 p-4 rounded-xl border ${task.done ? 'bg-foreground/[0.02] border-transparent' : 'bg-card border-border'} transition-colors`}>
+            <div className={`w-5 h-5 rounded border flex items-center justify-center ${task.done ? 'bg-accent-start border-accent-start text-foreground' : 'border-foreground/20'}`}>
               {task.done && <CheckSquare size={12} />}
             </div>
-            <span className={`text-sm ${task.done ? 'text-white/40 line-through' : 'text-white/80'}`}>{task.text}</span>
+            <span className={`text-sm ${task.done ? 'text-foreground/40 line-through' : 'text-foreground/80'}`}>{task.text}</span>
           </div>
         ))}
       </div>

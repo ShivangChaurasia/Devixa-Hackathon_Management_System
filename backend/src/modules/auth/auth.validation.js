@@ -42,6 +42,8 @@ export const updateProfileSchema = Joi.object({
   githubUrl: Joi.string().uri().allow(''),
   linkedinUrl: Joi.string().uri().allow(''),
   avatar: Joi.string().uri().allow(''),
+  isOnboarded: Joi.boolean(),
+  role: Joi.string().valid('PARTICIPANT', 'ORGANIZER', 'JUDGE'),
 });
 
 export const changePasswordSchema = Joi.object({

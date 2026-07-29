@@ -14,12 +14,12 @@ export default function StatCard({ title, value, icon: Icon, trend, trendLabel, 
     <GlassCard hover={true} className="flex flex-col relative group">
       <div className="flex justify-between items-start mb-4">
         <div className="flex flex-col">
-          <span className="text-white/60 text-sm font-medium mb-1">{title}</span>
+          <span className="text-foreground/60 text-sm font-medium mb-1">{title}</span>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-white tracking-tight">{value}</span>
+            <span className="text-3xl font-bold text-foreground tracking-tight">{value}</span>
           </div>
         </div>
-        <div className={`p-3 rounded-2xl bg-gradient-to-br ${colors[color]} shadow-lg flex items-center justify-center text-white`}>
+        <div className={`p-3 rounded-2xl bg-gradient-to-br ${colors[color]} shadow-lg flex items-center justify-center text-foreground`}>
           <Icon size={20} />
         </div>
       </div>
@@ -28,7 +28,7 @@ export default function StatCard({ title, value, icon: Icon, trend, trendLabel, 
         <div className={`flex items-center text-xs font-semibold px-2 py-1 rounded-full ${trendUp ? 'bg-status-success/15 text-status-success' : 'bg-status-error/15 text-status-error'}`}>
           {trendUp ? '↑' : '↓'} {trend}
         </div>
-        <span className="text-white/40 text-xs">{trendLabel}</span>
+        <span className="text-foreground/40 text-xs">{trendLabel}</span>
       </div>
 
       {children && (

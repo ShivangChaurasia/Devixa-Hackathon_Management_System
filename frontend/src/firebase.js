@@ -41,16 +41,10 @@ export const signInWithGoogle = async () => {
       },
     };
   } catch (error) {
-    console.warn("Firebase Google Auth failed, falling back to mock login due to network issue:", error.message);
-    // Return a mock user so local development isn't blocked by SSL/Network issues
+    console.error("Firebase Google Auth failed:", error);
     return {
-      success: true,
-      user: {
-        uid: 'mock-123',
-        email: 'demo@example.com',
-        name: 'Demo User',
-        avatar: '',
-      },
+      success: false,
+      error: error.message,
     };
   }
 };

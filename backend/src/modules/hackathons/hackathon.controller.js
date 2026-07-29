@@ -42,6 +42,21 @@ export class HackathonController {
     await hackathonService.deleteHackathon(req.params.id, req.user);
     return ApiResponse.success(res, 'Hackathon deleted successfully');
   });
+
+  getInvites = asyncHandler(async (req, res) => {
+    const result = await hackathonService.getPendingInvites(req.user.email);
+    return ApiResponse.success(res, 'Invites retrieved successfully', result);
+  });
+
+  acceptInvite = asyncHandler(async (req, res) => {
+    const hackathon = await hackathonService.acceptJudgeInvite(req.params.id, req.user);
+    return ApiResponse.success(res, 'Invite accepted successfully', { hackathon });
+  });
+
+  declineInvite = asyncHandler(async (req, res) => {
+    const hackathon = await hackathonService.declineJudgeInvite(req.params.id, req.user);
+    return ApiResponse.success(res, 'Invite declined successfully', { hackathon });
+  });
 }
 
 export const hackathonController = new HackathonController();

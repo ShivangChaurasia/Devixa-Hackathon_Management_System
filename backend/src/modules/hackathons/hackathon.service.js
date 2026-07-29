@@ -91,6 +91,47 @@ export class HackathonService {
     return await hackathonRepository.removeJudge(id, judgeUserId);
   }
 
+  async getPendingInvites(email) {
+    const invites = await hackathonRepository.model.find({ 
+      pendingJudgeEmails: email, 
+      deletedAt: null 
+    }).populate('organizerId', 'name organization').exec();
+    return invites;
+  }
+
+  async acceptJudgeInvite(id, user) {
+    const hackathon = await hackathonRepository.findById(id);
+    if (!hackathon) throw new NotFoundError('Hackathon not found');
+    if (!hackathon.pendingJudgeEmails.includes(user.email)) {
+      throw new ForbiddenError('You do not have a pending invite for this hackathon');
+    }
+
+    const updated = await hackathonRepository.model.findByIdAndUpdate(
+      id,
+      { 
+        $pull: { pendingJudgeEmails: user.email },
+        $addToSet: { judges: user._id }
+      },
+      { new: true }
+    );
+    return updated;
+  }
+
+  async declineJudgeInvite(id, user) {
+    const hackathon = await hackathonRepository.findById(id);
+    if (!hackathon) throw new NotFoundError('Hackathon not found');
+    if (!hackathon.pendingJudgeEmails.includes(user.email)) {
+      throw new ForbiddenError('You do not have a pending invite for this hackathon');
+    }
+
+    const updated = await hackathonRepository.model.findByIdAndUpdate(
+      id,
+      { $pull: { pendingJudgeEmails: user.email } },
+      { new: true }
+    );
+    return updated;
+  }
+
   async deleteHackathon(id, user) {
     const hackathon = await hackathonRepository.findById(id);
     if (!hackathon) {

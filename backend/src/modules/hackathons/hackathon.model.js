@@ -113,6 +113,10 @@ const hackathonSchema = new mongoose.Schema(
         ref: 'User',
       },
     ],
+    pendingJudgeEmails: {
+      type: [String],
+      default: [],
+    },
     status: {
       type: String,
       enum: [

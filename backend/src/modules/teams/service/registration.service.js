@@ -4,7 +4,8 @@ import { hackathonStateMachine } from '../../hackathons/hackathon.stateMachine.j
 import { ConflictError, NotFoundError, BadRequestError, ForbiddenError } from '../../../common/errors/AppError.js';
 
 export class RegistrationService {
-  async registerForHackathon(userId, hackathonId) {
+  async registerForHackathon(userId, data) {
+    const { hackathonId, githubProfile, linkedinProfile, experienceLevel, motivation } = data;
     const hackathon = await hackathonRepository.findById(hackathonId);
     if (!hackathon) {
       throw new NotFoundError('Hackathon not found');
@@ -24,7 +25,11 @@ export class RegistrationService {
     return await registrationRepository.create({
       hackathonId,
       userId,
-      status: 'APPROVED', // Auto-approved for participant registration
+      githubProfile,
+      linkedinProfile,
+      experienceLevel,
+      motivation,
+      status: 'PENDING', // Organizer needs to approve
     });
   }
 

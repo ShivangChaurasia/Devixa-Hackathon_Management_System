@@ -13,8 +13,8 @@ export default function SecondaryNav({ links }) {
             className={({ isActive }) =>
               `pb-4 text-sm font-medium transition-colors border-b-2 ${
                 isActive
-                  ? 'border-accent-start text-white'
-                  : 'border-transparent text-white/50 hover:text-white hover:border-white/20'
+                  ? 'border-accent-start text-foreground'
+                  : 'border-transparent text-foreground/50 hover:text-foreground hover:border-foreground/20'
               }`
             }
           >

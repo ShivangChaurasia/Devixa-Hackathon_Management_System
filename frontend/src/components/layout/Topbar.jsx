@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Search, Bell, Menu, X, ChevronDown, LogOut, Award, Trophy } from 'lucide-react';
+import { Search, Bell, Menu, X, ChevronDown, LogOut, Award, Trophy, Sun, Moon } from 'lucide-react';
 import CommandPalette from '../ui/CommandPalette';
 import { motion, AnimatePresence } from 'framer-motion';
 import { apiClient } from '../../services/apiClient';
 import { useApi } from '../../hooks/useApi';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function Topbar({ user, setUser, onLogout }) {
   const navigate = useNavigate();
@@ -13,10 +14,12 @@ export default function Topbar({ user, setUser, onLogout }) {
   const [isContextDropdownOpen, setIsContextDropdownOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
+  const { theme, toggleTheme } = useTheme();
+
   const { data: notifsRes, execute: fetchNotifs } = useApi(apiClient.get);
 
   useEffect(() => {
-    fetchNotifs('/notifications').catch(()=>null);
+    fetchNotifs('/notifications').catch(() => null);
   }, [fetchNotifs]);
 
   const notifications = notifsRes?.notifications || [];
@@ -39,7 +42,10 @@ export default function Topbar({ user, setUser, onLogout }) {
     ],
   };
 
-  const navLinks = navigationMap[user?.activeView] || navigationMap['PARTICIPANT'];
+  const userRole = user?.role?.toUpperCase();
+  const navLinks = userRole === 'ADMIN' 
+    ? [{ name: 'Admin Panel', path: '/app/admin' }]
+    : (navigationMap[user?.activeView] || navigationMap[userRole] || navigationMap['PARTICIPANT']);
 
   // Only show switchable capabilities (exclude ADMIN)
   const switchableCapabilities = (user?.capabilities || []).filter(c => c !== 'ADMIN');
@@ -58,18 +64,18 @@ export default function Topbar({ user, setUser, onLogout }) {
 
         {/* Logo & Context Switcher */}
         <div className="flex items-center gap-3">
-          <NavLink to="/app/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-accent-start to-accent-end flex items-center justify-center font-bold text-white shadow-lg">
+          <NavLink to={user?.role === 'ADMIN' ? "/app/admin" : "/app/dashboard"} className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-accent-start to-accent-end flex items-center justify-center font-bold text-foreground shadow-lg">
               D
             </div>
             <span className="font-bold text-xl hidden sm:block">Devixa</span>
           </NavLink>
 
-          {switchableCapabilities.length > 1 && (
+          {switchableCapabilities.length > 1 && user?.role !== 'ADMIN' && (
             <div className="relative">
               <button
                 onClick={() => setIsContextDropdownOpen(!isContextDropdownOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors text-xs font-semibold text-white/60 hover:text-white uppercase tracking-wider"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-foreground/5 transition-colors text-xs font-semibold text-foreground/60 hover:text-foreground uppercase tracking-wider"
               >
                 {user?.activeView}
                 <ChevronDown size={12} className={`transition-transform ${isContextDropdownOpen ? 'rotate-180' : ''}`} />
@@ -85,12 +91,12 @@ export default function Topbar({ user, setUser, onLogout }) {
                       exit={{ opacity: 0, y: 8 }}
                       className="absolute top-full left-0 mt-2 w-44 rounded-xl border border-border bg-background/95 backdrop-blur-xl shadow-2xl p-1.5 z-50"
                     >
-                      <div className="text-[10px] font-semibold text-white/30 px-3 py-2 uppercase tracking-wider">Switch Context</div>
+                      <div className="text-[10px] font-semibold text-foreground/30 px-3 py-2 uppercase tracking-wider">Switch Context</div>
                       {switchableCapabilities.map(cap => (
                         <button
                           key={cap}
                           onClick={() => switchContext(cap)}
-                          className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${user?.activeView === cap ? 'bg-accent-start/20 text-accent-start font-medium' : 'hover:bg-white/5 text-white/70 hover:text-white'}`}
+                          className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${user?.activeView === cap ? 'bg-accent-start/20 text-accent-start font-medium' : 'hover:bg-foreground/5 text-foreground/70 hover:text-foreground'}`}
                         >
                           {cap}
                         </button>
@@ -110,26 +116,13 @@ export default function Topbar({ user, setUser, onLogout }) {
               key={link.path}
               to={link.path}
               className={({ isActive }) =>
-                `px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  isActive ? 'bg-white/10 text-white shadow-sm' : 'text-white/60 hover:text-white hover:bg-white/5'
+                `px-4 py-2 rounded-xl text-sm font-medium transition-all ${isActive ? 'bg-foreground/10 text-foreground shadow-sm' : 'text-foreground/60 hover:text-foreground hover:bg-foreground/5'
                 }`
               }
             >
               {link.name}
             </NavLink>
           ))}
-          {user?.capabilities?.includes('ADMIN') && (
-            <NavLink
-              to="/app/admin"
-              className={({ isActive }) =>
-                `px-4 py-2 rounded-xl text-sm font-medium transition-all ml-2 ${
-                  isActive ? 'bg-status-error/20 text-status-error border border-status-error/30' : 'text-status-error/70 hover:text-status-error hover:bg-status-error/10 border border-transparent'
-                }`
-              }
-            >
-              Admin Panel
-            </NavLink>
-          )}
         </nav>
 
         {/* Global Actions */}
@@ -137,19 +130,24 @@ export default function Topbar({ user, setUser, onLogout }) {
           {/* Search/Command Palette Trigger */}
           <button
             onClick={() => setIsCommandOpen(true)}
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-white/5 hover:bg-white/10 text-white/40 transition-colors w-48"
+            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-foreground/5 hover:bg-foreground/10 text-foreground/40 transition-colors w-48"
           >
             <Search size={14} />
             <span className="text-xs font-medium flex-1 text-left">Search...</span>
             <kbd className="hidden lg:inline-flex px-1.5 rounded bg-background text-[10px] font-mono border border-border">⌘K</kbd>
           </button>
 
-          <button onClick={() => setIsCommandOpen(true)} className="sm:hidden p-2 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors">
+          <button onClick={() => setIsCommandOpen(true)} className="sm:hidden p-2 rounded-xl text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors">
             <Search size={20} />
           </button>
 
+          {/* Theme Toggle */}
+          <button onClick={toggleTheme} className="p-2 rounded-xl text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors">
+            {theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
+
           {/* Notifications */}
-          <button onClick={() => navigate('/app/notifications')} className="relative p-2 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors">
+          <button onClick={() => navigate('/app/notifications')} className="relative p-2 rounded-xl text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors">
             <Bell size={20} />
             {unreadCount > 0 && (
               <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-status-error ring-4 ring-background" />
@@ -165,7 +163,7 @@ export default function Topbar({ user, setUser, onLogout }) {
               {user?.avatar ? (
                 <img src={user.avatar} alt={user.name} className="w-full h-full rounded-full object-cover" />
               ) : (
-                <span className="text-sm font-bold text-white">{(user?.name || 'U').charAt(0).toUpperCase()}</span>
+                <span className="text-sm font-bold text-foreground">{(user?.name || 'U').charAt(0).toUpperCase()}</span>
               )}
             </button>
 
@@ -181,25 +179,31 @@ export default function Topbar({ user, setUser, onLogout }) {
                     className="absolute top-full right-0 mt-2 w-64 rounded-xl border border-border bg-card/95 backdrop-blur-xl shadow-2xl p-2 z-50 divide-y divide-border"
                   >
                     <div className="px-3 py-3">
-                      <p className="text-sm font-semibold text-white">{user?.name}</p>
-                      <p className="text-xs text-white/50 truncate">{user?.email}</p>
-                      
-                      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border">
-                        <Trophy size={14} className="text-accent-start" />
-                        <span className="text-xs font-medium text-white/80">300 Global Points</span>
-                      </div>
+                      <p className="text-sm font-semibold text-foreground">{user?.name}</p>
+                      <p className="text-xs text-foreground/50 truncate">{user?.email}</p>
+
+                      {userRole === 'PARTICIPANT' && (
+                        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border">
+                          <Trophy size={14} className="text-accent-start" />
+                          <span className="text-xs font-medium text-foreground/80">300 Global Points</span>
+                        </div>
+                      )}
                     </div>
-                    
+
                     <div className="p-1">
-                      <button onClick={() => { setIsProfileDropdownOpen(false); navigate('/app/profile'); }} className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-white/5 text-white/70 hover:text-white transition-colors">
+                      <button onClick={() => { setIsProfileDropdownOpen(false); navigate('/app/profile'); }} className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-foreground/5 text-foreground/70 hover:text-foreground transition-colors">
                         My Profile
                       </button>
-                      <button onClick={() => { setIsProfileDropdownOpen(false); navigate('/app/leaderboard'); }} className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-white/5 text-white/70 hover:text-white transition-colors">
-                        Leaderboard
-                      </button>
-                      <button onClick={() => { setIsProfileDropdownOpen(false); navigate('/app/certificates'); }} className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-white/5 text-white/70 hover:text-white transition-colors">
-                        Certificates
-                      </button>
+                      {userRole === 'PARTICIPANT' && (
+                        <>
+                          <button onClick={() => { setIsProfileDropdownOpen(false); navigate('/app/leaderboard'); }} className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-foreground/5 text-foreground/70 hover:text-foreground transition-colors">
+                            Leaderboard
+                          </button>
+                          <button onClick={() => { setIsProfileDropdownOpen(false); navigate('/app/certificates'); }} className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-foreground/5 text-foreground/70 hover:text-foreground transition-colors">
+                            Certificates
+                          </button>
+                        </>
+                      )}
                     </div>
 
                     <div className="p-1">
@@ -222,7 +226,7 @@ export default function Topbar({ user, setUser, onLogout }) {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden ml-2 p-2 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+            className="md:hidden ml-2 p-2 rounded-xl text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -240,35 +244,20 @@ export default function Topbar({ user, setUser, onLogout }) {
             className="md:hidden border-b border-border bg-card/95 backdrop-blur-xl overflow-hidden"
           >
             <nav className="flex flex-col p-4 gap-2">
-              <div className="text-[10px] font-semibold text-white/30 px-2 uppercase tracking-wider mb-1">Navigation</div>
+              <div className="text-[10px] font-semibold text-foreground/30 px-2 uppercase tracking-wider mb-1">Navigation</div>
               {navLinks.map((link) => (
                 <NavLink
                   key={link.path}
                   to={link.path}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                      isActive ? 'bg-white/10 text-white' : 'text-white/60 hover:text-white hover:bg-white/5'
+                    `px-4 py-3 rounded-xl text-sm font-medium transition-all ${isActive ? 'bg-foreground/10 text-foreground' : 'text-foreground/60 hover:text-foreground hover:bg-foreground/5'
                     }`
                   }
                 >
                   {link.name}
                 </NavLink>
               ))}
-              
-              {user?.capabilities?.includes('ADMIN') && (
-                <NavLink
-                  to="/app/admin"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    `px-4 py-3 rounded-xl text-sm font-medium transition-all mt-2 ${
-                      isActive ? 'bg-status-error/20 text-status-error border border-status-error/30' : 'text-status-error/70 hover:text-status-error hover:bg-status-error/10 border border-transparent'
-                    }`
-                  }
-                >
-                  Admin Panel
-                </NavLink>
-              )}
             </nav>
           </motion.div>
         )}

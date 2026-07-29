@@ -12,7 +12,13 @@ export class HackathonRepository extends BaseRepository {
 
     if (mode) query.mode = mode;
     if (theme) query.theme = new RegExp(theme, 'i');
-    if (status) query.status = status;
+    if (status) {
+      if (status.includes(',')) {
+        query.status = { $in: status.split(',') };
+      } else {
+        query.status = status;
+      }
+    }
 
     if (search) {
       query.$text = { $search: search };

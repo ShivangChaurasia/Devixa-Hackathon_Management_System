@@ -18,10 +18,10 @@ export default function PublicNavbar() {
       <div className="flex h-16 items-center justify-between px-4 md:px-8 max-w-[1200px] mx-auto">
         {/* Logo */}
         <NavLink to="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-accent-start to-accent-end flex items-center justify-center font-bold text-white shadow-lg">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-accent-start to-accent-end flex items-center justify-center font-bold text-foreground shadow-lg">
             D
           </div>
-          <span className="font-bold text-xl text-white">Devixa</span>
+          <span className="font-bold text-xl text-foreground">Devixa</span>
         </NavLink>
 
         {/* Desktop Nav */}
@@ -30,7 +30,7 @@ export default function PublicNavbar() {
             <NavLink
               key={link.name}
               to={link.path}
-              className="text-sm font-medium text-white/60 hover:text-white transition-colors"
+              className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
             >
               {link.name}
             </NavLink>
@@ -41,20 +41,20 @@ export default function PublicNavbar() {
         <div className="hidden md:flex items-center gap-3">
           <button
             onClick={() => navigate('/auth')}
-            className="px-4 py-2 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+            className="px-4 py-2 rounded-xl text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors"
           >
             Sign In
           </button>
           <button
             onClick={() => navigate('/auth')}
-            className="px-5 py-2 rounded-full text-sm font-medium text-white bg-gradient-to-r from-accent-start to-accent-end shadow-[0_4px_14px_0_rgba(99,102,241,0.39)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.23)] transition-all"
+            className="px-5 py-2 rounded-full text-sm font-medium text-foreground bg-gradient-to-r from-accent-start to-accent-end shadow-[0_4px_14px_0_rgba(99,102,241,0.39)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.23)] transition-all"
           >
             Get Started
           </button>
         </div>
 
         {/* Mobile Toggle */}
-        <button className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors" onClick={() => setIsMobileOpen(!isMobileOpen)}>
+        <button className="md:hidden p-2 rounded-lg hover:bg-foreground/10 transition-colors" onClick={() => setIsMobileOpen(!isMobileOpen)}>
           {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
@@ -73,14 +73,14 @@ export default function PublicNavbar() {
                 key={link.name}
                 to={link.path}
                 onClick={() => setIsMobileOpen(false)}
-                className="block px-4 py-3 rounded-xl text-sm font-medium text-white/60 hover:text-white hover:bg-white/5"
+                className="block px-4 py-3 rounded-xl text-sm font-medium text-foreground/60 hover:text-foreground hover:bg-foreground/5"
               >
                 {link.name}
               </NavLink>
             ))}
             <div className="border-t border-border pt-4 mt-4 space-y-2">
-              <button onClick={() => { navigate('/auth'); setIsMobileOpen(false); }} className="w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-white/60 hover:text-white hover:bg-white/5">Sign In</button>
-              <button onClick={() => { navigate('/auth'); setIsMobileOpen(false); }} className="w-full px-4 py-3 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-accent-start to-accent-end">Get Started</button>
+              <button onClick={() => { navigate('/auth'); setIsMobileOpen(false); }} className="w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-foreground/60 hover:text-foreground hover:bg-foreground/5">Sign In</button>
+              <button onClick={() => { navigate('/auth'); setIsMobileOpen(false); }} className="w-full px-4 py-3 rounded-xl text-sm font-medium text-foreground bg-gradient-to-r from-accent-start to-accent-end">Get Started</button>
             </div>
           </motion.div>
         )}

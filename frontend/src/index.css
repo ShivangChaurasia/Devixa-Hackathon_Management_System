@@ -3,11 +3,14 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   
-  --color-background: #09090B;
-  --color-card: #111113;
-  --color-card-secondary: #18181B;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-hover: rgba(255, 255, 255, 0.15);
+  /* These map the theme variables to tailwind utilities */
+  --color-background: var(--theme-background);
+  --color-card: var(--theme-card);
+  --color-card-secondary: var(--theme-card-secondary);
+  --color-border: var(--theme-border);
+  --color-border-hover: var(--theme-border-hover);
+  --color-foreground: var(--theme-foreground);
+  --color-muted: var(--theme-muted);
   
   --color-accent-start: #a855f7; /* purple-500 */
   --color-accent-end: #6366f1; /* indigo-500 */
@@ -19,9 +22,33 @@
 }
 
 @layer base {
+  :root {
+    --theme-background: #ffffff;
+    --theme-card: #ffffff;
+    --theme-card-secondary: #f4f4f5;
+    --theme-border: rgba(0, 0, 0, 0.1);
+    --theme-border-hover: rgba(0, 0, 0, 0.2);
+    --theme-foreground: #09090b;
+    --theme-muted: rgba(9, 9, 11, 0.6);
+    color-scheme: light;
+  }
+
+  :root[data-theme="dark"] {
+    --theme-background: #09090B;
+    --theme-card: #111113;
+    --theme-card-secondary: #18181B;
+    --theme-border: rgba(255, 255, 255, 0.08);
+    --theme-border-hover: rgba(255, 255, 255, 0.15);
+    --theme-foreground: #fafafa;
+    --theme-muted: rgba(255, 255, 255, 0.6);
+    color-scheme: dark;
+  }
+}
+
+@layer base {
   body {
     background-color: var(--color-background);
-    color: #fafafa;
+    color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

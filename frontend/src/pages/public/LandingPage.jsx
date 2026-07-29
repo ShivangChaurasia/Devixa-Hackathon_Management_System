@@ -56,7 +56,7 @@ export default function LandingPage() {
   const hackathons = hackathonsResult?.hackathons || [];
 
   return (
-    <div className="min-h-screen bg-background text-white">
+    <div className="min-h-screen bg-background text-foreground">
       <PublicNavbar />
 
       {/* Hero */}
@@ -67,7 +67,7 @@ export default function LandingPage() {
 
         <div className="max-w-[1200px] mx-auto px-4 md:px-8 pt-24 pb-20 md:pt-32 md:pb-28 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-border text-sm font-medium text-white/70 mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-foreground/5 border border-border text-sm font-medium text-foreground/70 mb-8">
               <div className="w-2 h-2 rounded-full bg-status-success animate-pulse" />
               200+ hackathons hosted and counting
             </div>
@@ -77,19 +77,19 @@ export default function LandingPage() {
                 world-class hackathons
               </span>
             </h1>
-            <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
+            <p className="text-lg md:text-xl text-foreground/60 max-w-2xl mx-auto mb-10 leading-relaxed">
               Discover, participate, organize, and judge hackathons — all in one place. From registration to certification, Devixa handles the entire lifecycle.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
                 onClick={() => navigate('/hackathons')}
-                className="px-8 py-3.5 rounded-full text-base font-medium text-white bg-gradient-to-r from-accent-start to-accent-end shadow-[0_4px_14px_0_rgba(99,102,241,0.39)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.23)] hover:scale-[1.02] transition-all flex items-center gap-2"
+                className="px-8 py-3.5 rounded-full text-base font-medium text-foreground bg-gradient-to-r from-accent-start to-accent-end shadow-[0_4px_14px_0_rgba(99,102,241,0.39)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.23)] hover:scale-[1.02] transition-all flex items-center gap-2"
               >
                 Browse Hackathons <ArrowRight size={18} />
               </button>
               <button
                 onClick={() => navigate('/auth', { state: { isSignUp: true } })}
-                className="px-8 py-3.5 rounded-full text-base font-medium text-white/70 bg-white/5 border border-border hover:bg-white/10 hover:text-white transition-all"
+                className="px-8 py-3.5 rounded-full text-base font-medium text-foreground/70 bg-foreground/5 border border-border hover:bg-foreground/10 hover:text-foreground transition-all"
               >
                 Start Organizing
               </button>
@@ -105,8 +105,8 @@ export default function LandingPage() {
           >
             {UI_PLATFORM_STATS.map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-white mb-1">{stat.value}</div>
-                <div className="text-sm text-white/50">{stat.label}</div>
+                <div className="text-3xl md:text-4xl font-bold text-foreground mb-1">{stat.value}</div>
+                <div className="text-sm text-foreground/50">{stat.label}</div>
               </div>
             ))}
           </motion.div>
@@ -116,12 +116,12 @@ export default function LandingPage() {
       {/* Featured Hackathons */}
       <section className="max-w-[1200px] mx-auto px-4 md:px-8 py-20">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Featured Hackathons</h2>
-          <p className="text-white/50 max-w-lg mx-auto">Join thousands of developers building the future. Find the perfect hackathon for you.</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Featured Hackathons</h2>
+          <p className="text-foreground/50 max-w-lg mx-auto">Join thousands of developers building the future. Find the perfect hackathon for you.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {loading ? (
-             <div className="col-span-3 text-center text-white/50 py-10">Loading hackathons...</div>
+             <div className="col-span-3 text-center text-foreground/50 py-10">Loading hackathons...</div>
           ) : hackathons.map((hackathon, index) => (
             <motion.div
               key={hackathon._id || hackathon.id}
@@ -140,10 +140,10 @@ export default function LandingPage() {
                 </span>
               </div>
               <div className="p-5">
-                <p className="text-xs text-white/40 mb-1">{hackathon.organization}</p>
-                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-accent-start transition-colors">{hackathon.title}</h3>
-                <p className="text-sm text-white/50 mb-4 line-clamp-2">{hackathon.tagline}</p>
-                <div className="flex items-center justify-between text-xs text-white/40">
+                <p className="text-xs text-foreground/40 mb-1">{hackathon.organization}</p>
+                <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-accent-start transition-colors">{hackathon.title}</h3>
+                <p className="text-sm text-foreground/50 mb-4 line-clamp-2">{hackathon.tagline}</p>
+                <div className="flex items-center justify-between text-xs text-foreground/40">
                   <span>{hackathon.prizePool || 'TBA'} Prize Pool</span>
                   <span>{hackathon.participantsCount || 0} participants</span>
                 </div>
@@ -152,7 +152,7 @@ export default function LandingPage() {
           ))}
         </div>
         <div className="text-center mt-10">
-          <button onClick={() => navigate('/hackathons')} className="text-sm font-medium text-accent-start hover:text-white transition-colors flex items-center gap-2 mx-auto">
+          <button onClick={() => navigate('/hackathons')} className="text-sm font-medium text-accent-start hover:text-foreground transition-colors flex items-center gap-2 mx-auto">
             View all hackathons <ArrowRight size={16} />
           </button>
         </div>
@@ -162,8 +162,8 @@ export default function LandingPage() {
       <section className="bg-card-secondary border-y border-border">
         <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-20">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Built for every role</h2>
-            <p className="text-white/50 max-w-lg mx-auto">Whether you're hacking, organizing, or judging — Devixa is designed for your workflow.</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Built for every role</h2>
+            <p className="text-foreground/50 max-w-lg mx-auto">Whether you're hacking, organizing, or judging — Devixa is designed for your workflow.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
@@ -197,11 +197,11 @@ export default function LandingPage() {
                 <div className="w-12 h-12 rounded-xl bg-accent-start/10 flex items-center justify-center mb-6">
                   <feature.icon className="text-accent-start" size={24} />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
-                <p className="text-sm text-white/60 mb-6 leading-relaxed">{feature.description}</p>
+                <h3 className="text-xl font-bold text-foreground mb-3">{feature.title}</h3>
+                <p className="text-sm text-foreground/60 mb-6 leading-relaxed">{feature.description}</p>
                 <ul className="space-y-2">
                   {feature.features.map((f) => (
-                    <li key={f} className="text-sm text-white/50 flex items-center gap-2">
+                    <li key={f} className="text-sm text-foreground/50 flex items-center gap-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-accent-start shrink-0" />
                       {f}
                     </li>
@@ -216,8 +216,8 @@ export default function LandingPage() {
       {/* Testimonials */}
       <section className="max-w-[1200px] mx-auto px-4 md:px-8 py-20">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Loved by builders</h2>
-          <p className="text-white/50">Hear from participants, organizers, and judges who use Devixa.</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Loved by builders</h2>
+          <p className="text-foreground/50">Hear from participants, organizers, and judges who use Devixa.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {UI_TESTIMONIALS.map((t, index) => (
@@ -229,12 +229,12 @@ export default function LandingPage() {
               transition={{ delay: index * 0.1 }}
               className="rounded-2xl border border-border bg-card p-6"
             >
-              <p className="text-sm text-white/70 leading-relaxed mb-6 italic">"{t.quote}"</p>
+              <p className="text-sm text-foreground/70 leading-relaxed mb-6 italic">"{t.quote}"</p>
               <div className="flex items-center gap-3">
-                <img src={t.avatar} alt={t.author} className="w-10 h-10 rounded-full bg-white/10" />
+                <img src={t.avatar} alt={t.author} className="w-10 h-10 rounded-full bg-foreground/10" />
                 <div>
-                  <div className="text-sm font-semibold text-white">{t.author}</div>
-                  <div className="text-xs text-white/40">{t.role}</div>
+                  <div className="text-sm font-semibold text-foreground">{t.author}</div>
+                  <div className="text-xs text-foreground/40">{t.role}</div>
                 </div>
               </div>
             </motion.div>
@@ -246,13 +246,13 @@ export default function LandingPage() {
       <section className="border-t border-border bg-card-secondary">
         <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-16">
           <div className="text-center mb-10">
-            <p className="text-sm uppercase tracking-wider text-white/40 font-medium">Trusted by leading organizations</p>
+            <p className="text-sm uppercase tracking-wider text-foreground/40 font-medium">Trusted by leading organizations</p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-10 opacity-60">
             {UI_ORGANIZATIONS.map((org) => (
               <div key={org.name} className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-300">
                 <img src={org.logo} alt={org.name} className="w-8 h-8 rounded-full" />
-                <span className="font-semibold text-white/70">{org.name}</span>
+                <span className="font-semibold text-foreground/70">{org.name}</span>
               </div>
             ))}
           </div>
@@ -262,16 +262,16 @@ export default function LandingPage() {
       {/* CTA */}
       <section className="max-w-[1200px] mx-auto px-4 md:px-8 py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-accent-start/10 to-accent-end/10 rounded-[3rem] -z-10" />
-        <div className="absolute inset-0 border border-white/10 rounded-[3rem] -z-10" />
+        <div className="absolute inset-0 border border-foreground/10 rounded-[3rem] -z-10" />
         
         <div className="text-center z-10 relative px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Start building your legacy</h2>
-          <p className="text-white/60 max-w-xl mx-auto mb-10 text-lg">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Start building your legacy</h2>
+          <p className="text-foreground/60 max-w-xl mx-auto mb-10 text-lg">
             Join the fastest growing platform for hackathons. Create your account today and start hacking.
           </p>
           <button
             onClick={() => navigate('/auth', { state: { isSignUp: true } })}
-            className="px-10 py-4 rounded-full text-lg font-bold text-white bg-white/10 border border-white/20 backdrop-blur-md hover:bg-white/20 hover:scale-105 transition-all shadow-xl"
+            className="px-10 py-4 rounded-full text-lg font-bold text-foreground bg-foreground/10 border border-foreground/20 backdrop-blur-md hover:bg-foreground/20 hover:scale-105 transition-all shadow-xl"
           >
             Create Free Account
           </button>

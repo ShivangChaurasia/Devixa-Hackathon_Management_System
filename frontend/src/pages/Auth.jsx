@@ -35,8 +35,37 @@ export default function Auth({ onAuthSuccess }) {
 
     const res = await signInWithGoogle();
     if (!res.success) {
-      // Because Google Auth popup was blocked by SSL in development, bypass it using our local API
-      // If we are here, Firebase threw an error. We will just show the error.
+      // Because Google Auth popup is often blocked or fails due to network/SSL errors in local dev,
+      // we will automatically bypass it using our local API if we are in development mode.
+      if (import.meta.env.DEV) {
+        console.warn("Firebase Auth failed, bypassing with a mock DEV Google account.");
+        try {
+          const fallbackEmail = prompt("Google Auth Failed (Network/CORS).\n\nDEV BYPASS: Enter the email address you want to log in as:", formData.email || "dev-google@example.com");
+          
+          if (!fallbackEmail) {
+            setError('Google Sign-In failed and bypass was cancelled.');
+            setLoading(false);
+            return;
+          }
+
+          const mockName = fallbackEmail.split('@')[0];
+          const data = await apiClient.post('/auth/google', {
+            email: fallbackEmail,
+            name: mockName,
+            avatar: '',
+            googleId: 'dev-mock-google-id-' + fallbackEmail,
+            role: 'PARTICIPANT',
+          });
+          handleSuccess(data);
+          return;
+        } catch (err) {
+          setError(err.message || 'Mock Dev Authentication failed');
+          setLoading(false);
+          return;
+        }
+      }
+
+      // If in production, show the actual error
       setError(res.error || 'Google Sign-In failed due to network settings.');
       setLoading(false);
       return;
@@ -80,7 +109,7 @@ export default function Auth({ onAuthSuccess }) {
   };
 
   return (
-    <div className="min-h-screen bg-background text-white flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative overflow-hidden">
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-accent-start/20 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-accent-end/20 rounded-full blur-[120px] pointer-events-none" />
 
@@ -91,14 +120,14 @@ export default function Auth({ onAuthSuccess }) {
       >
         <GlassCard hover={false} className="p-8 md:p-10">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-border text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-foreground/5 border border-border text-sm font-medium mb-6">
               <div className="w-2 h-2 rounded-full bg-accent-start"></div>
               Devixa Platform
             </div>
             <h1 className="text-3xl font-display font-bold tracking-tight mb-2">
               {isLogin ? 'Welcome Back' : 'Create Account'}
             </h1>
-            <p className="text-white/60 text-sm">
+            <p className="text-foreground/60 text-sm">
               {isLogin ? 'Sign in to access your dashboard' : 'Join the developer ecosystem'}
             </p>
           </div>
@@ -112,7 +141,7 @@ export default function Auth({ onAuthSuccess }) {
           <button 
             onClick={handleGoogleAuth} 
             disabled={loading} 
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-border hover:bg-white/10 hover:border-border-hover transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed mb-6"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-foreground/5 border border-border hover:bg-foreground/10 hover:border-border-hover transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed mb-6"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -125,7 +154,7 @@ export default function Auth({ onAuthSuccess }) {
 
           <div className="flex items-center gap-4 mb-6">
             <div className="flex-1 h-px bg-border"></div>
-            <span className="text-xs text-white/40 uppercase font-medium tracking-wider">Or</span>
+            <span className="text-xs text-foreground/40 uppercase font-medium tracking-wider">Or</span>
             <div className="flex-1 h-px bg-border"></div>
           </div>
 
@@ -138,13 +167,13 @@ export default function Auth({ onAuthSuccess }) {
                   exit={{ opacity: 0, height: 0, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <label className="block text-xs font-medium text-white/70 mb-1.5 ml-1">Full Name</label>
+                  <label className="block text-xs font-medium text-foreground/70 mb-1.5 ml-1">Full Name</label>
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-accent-start focus:ring-1 focus:ring-accent-start outline-none transition-all"
+                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground placeholder-white/30 focus:border-accent-start focus:ring-1 focus:ring-accent-start outline-none transition-all"
                     placeholder="John Doe"
                     required={!isLogin}
                   />
@@ -153,26 +182,26 @@ export default function Auth({ onAuthSuccess }) {
             </AnimatePresence>
 
             <div>
-              <label className="block text-xs font-medium text-white/70 mb-1.5 ml-1">Email Address</label>
+              <label className="block text-xs font-medium text-foreground/70 mb-1.5 ml-1">Email Address</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full bg-background border border-border rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-accent-start focus:ring-1 focus:ring-accent-start outline-none transition-all"
+                className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground placeholder-white/30 focus:border-accent-start focus:ring-1 focus:ring-accent-start outline-none transition-all"
                 placeholder="you@example.com"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-white/70 mb-1.5 ml-1">Password</label>
+              <label className="block text-xs font-medium text-foreground/70 mb-1.5 ml-1">Password</label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full bg-background border border-border rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-accent-start focus:ring-1 focus:ring-accent-start outline-none transition-all"
+                className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground placeholder-white/30 focus:border-accent-start focus:ring-1 focus:ring-accent-start outline-none transition-all"
                 placeholder="••••••••"
                 required
               />
@@ -187,7 +216,7 @@ export default function Auth({ onAuthSuccess }) {
             </GradientButton>
           </form>
 
-          <div className="mt-6 text-center text-sm text-white/60">
+          <div className="mt-6 text-center text-sm text-foreground/60">
             {isLogin ? "Don't have an account? " : "Already have an account? "}
             <button 
               onClick={() => setIsLogin(!isLogin)} 

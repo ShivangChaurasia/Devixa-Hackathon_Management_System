@@ -14,6 +14,10 @@ const router = Router();
 
 // Public routes
 router.get('/', validate(hackathonQuerySchema, 'query'), hackathonController.list);
+
+// Judge protected routes (moved before /:id)
+router.get('/judging/invites', protect, authorize('JUDGE'), hackathonController.getInvites);
+
 router.get('/:id', hackathonController.getById);
 
 // Protected routes (Organizer & Admin)
@@ -25,5 +29,9 @@ router.patch('/:id/status', authorize('ORGANIZER', 'ADMIN'), validate(updateStat
 router.post('/:id/judges', authorize('ORGANIZER', 'ADMIN'), validate(judgeAssignmentSchema), hackathonController.assignJudge);
 router.delete('/:id/judges/:judgeId', authorize('ORGANIZER', 'ADMIN'), hackathonController.removeJudge);
 router.delete('/:id', authorize('ORGANIZER', 'ADMIN'), hackathonController.delete);
+
+// Judge routes (Accept/Decline)
+router.post('/:id/judges/accept', authorize('JUDGE'), hackathonController.acceptInvite);
+router.post('/:id/judges/decline', authorize('JUDGE'), hackathonController.declineInvite);
 
 export default router;

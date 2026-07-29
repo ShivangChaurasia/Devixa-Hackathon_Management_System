@@ -23,8 +23,25 @@ const registrationSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ['PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'],
-      default: 'APPROVED',
+      default: 'PENDING',
       index: true,
+    },
+    githubProfile: {
+      type: String,
+      default: '',
+    },
+    linkedinProfile: {
+      type: String,
+      default: '',
+    },
+    experienceLevel: {
+      type: String,
+      enum: ['BEGINNER', 'INTERMEDIATE', 'EXPERT', ''],
+      default: '',
+    },
+    motivation: {
+      type: String,
+      default: '',
     },
     registeredAt: {
       type: Date,

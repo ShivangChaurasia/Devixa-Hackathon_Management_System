@@ -31,8 +31,8 @@ export default function Settings() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                 activeTab === tab.id
-                  ? 'bg-accent-start/20 text-white'
-                  : 'text-white/60 hover:bg-white/5 hover:text-white'
+                  ? 'bg-accent-start/20 text-foreground'
+                  : 'text-foreground/60 hover:bg-foreground/5 hover:text-foreground'
               }`}
             >
               <tab.icon size={18} className={activeTab === tab.id ? 'text-accent-start' : ''} />
@@ -64,18 +64,34 @@ function AccountSettings({ user }) {
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
       <GlassCard className="space-y-6">
         <div>
-          <h3 className="text-lg font-semibold text-white mb-1">Account Information</h3>
-          <p className="text-sm text-white/50">Update your basic profile details.</p>
+          <h3 className="text-lg font-semibold text-foreground mb-1">Account Information</h3>
+          <p className="text-sm text-foreground/50">Update your basic profile details.</p>
         </div>
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
              <div className="space-y-2">
-               <label className="text-sm font-medium text-white/70">Full Name</label>
-               <input type="text" defaultValue={user?.name} className="w-full bg-background border border-border rounded-xl px-4 py-3 text-white focus:border-accent-start outline-none transition-colors" />
+               <label className="text-sm font-medium text-foreground/70">Full Name</label>
+               <input type="text" defaultValue={user?.name} className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:border-accent-start outline-none transition-colors" />
              </div>
              <div className="space-y-2">
-               <label className="text-sm font-medium text-white/70">Email Address</label>
-               <input type="email" defaultValue={user?.email} className="w-full bg-background border border-border rounded-xl px-4 py-3 text-white focus:border-accent-start outline-none transition-colors" disabled />
+               <label className="text-sm font-medium text-foreground/70">Email Address</label>
+               <input type="email" defaultValue={user?.email} className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:border-accent-start outline-none transition-colors" disabled />
+             </div>
+             <div className="space-y-2">
+               <label className="text-sm font-medium text-foreground/70">Username</label>
+               <input type="text" defaultValue={user?.username} className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:border-accent-start outline-none transition-colors" disabled />
+             </div>
+             <div className="space-y-2">
+               <label className="text-sm font-medium text-foreground/70">Registered Role</label>
+               <input type="text" defaultValue={user?.role || 'user'} className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:border-accent-start outline-none transition-colors capitalize" disabled />
+             </div>
+             <div className="space-y-2">
+               <label className="text-sm font-medium text-foreground/70">Phone Number</label>
+               <input type="tel" defaultValue={user?.phone} className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:border-accent-start outline-none transition-colors" />
+             </div>
+             <div className="space-y-2 md:col-span-2">
+               <label className="text-sm font-medium text-foreground/70">GitHub Profile URL</label>
+               <input type="url" defaultValue={user?.githubUrl} className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:border-accent-start outline-none transition-colors" />
              </div>
           </div>
           <GradientButton className="mt-4">Save Changes</GradientButton>
@@ -104,15 +120,15 @@ function BecomeOrganizerFlow({ user, setUser }) {
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
       <GlassCard className="space-y-6">
         <div>
-          <h3 className="text-lg font-semibold text-white mb-1">Become an Organizer</h3>
-          <p className="text-sm text-white/50">Host and manage your own hackathons on Devixa.</p>
+          <h3 className="text-lg font-semibold text-foreground mb-1">Become an Organizer</h3>
+          <p className="text-sm text-foreground/50">Host and manage your own hackathons on Devixa.</p>
         </div>
 
         {step === 1 && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
             <div className="p-4 rounded-xl bg-accent-start/10 border border-accent-start/20">
-              <h4 className="font-semibold text-white mb-2">Terms & Conditions</h4>
-              <p className="text-sm text-white/70">By becoming an organizer, you agree to Devixa's platform guidelines. You must maintain fair judging practices and pay prize pools within 30 days of the hackathon ending.</p>
+              <h4 className="font-semibold text-foreground mb-2">Terms & Conditions</h4>
+              <p className="text-sm text-foreground/70">By becoming an organizer, you agree to Devixa's platform guidelines. You must maintain fair judging practices and pay prize pools within 30 days of the hackathon ending.</p>
             </div>
             <GradientButton onClick={() => setStep(2)}>I Agree, Continue</GradientButton>
           </motion.div>
@@ -122,29 +138,29 @@ function BecomeOrganizerFlow({ user, setUser }) {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
             <div className="space-y-4">
                <div className="space-y-2">
-                 <label className="text-sm font-medium text-white/70">Organization Name *</label>
+                 <label className="text-sm font-medium text-foreground/70">Organization Name *</label>
                  <input 
                    type="text" 
                    required
                    value={orgDetails.name}
                    onChange={e => setOrgDetails({...orgDetails, name: e.target.value})}
                    placeholder="e.g. University Coding Club" 
-                   className="w-full bg-background border border-border rounded-xl px-4 py-3 text-white focus:border-accent-start outline-none transition-colors" 
+                   className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:border-accent-start outline-none transition-colors" 
                  />
                </div>
                <div className="space-y-2">
-                 <label className="text-sm font-medium text-white/70">Description</label>
+                 <label className="text-sm font-medium text-foreground/70">Description</label>
                  <textarea 
                    rows="3"
                    value={orgDetails.description}
                    onChange={e => setOrgDetails({...orgDetails, description: e.target.value})}
                    placeholder="What does your organization do?" 
-                   className="w-full bg-background border border-border rounded-xl px-4 py-3 text-white focus:border-accent-start outline-none transition-colors" 
+                   className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:border-accent-start outline-none transition-colors" 
                  />
                </div>
             </div>
             <div className="flex gap-4 pt-4">
-              <button onClick={() => setStep(1)} className="px-6 py-2 rounded-xl text-sm font-semibold text-white/60 hover:text-white transition-colors">Back</button>
+              <button onClick={() => setStep(1)} className="px-6 py-2 rounded-xl text-sm font-semibold text-foreground/60 hover:text-foreground transition-colors">Back</button>
               <GradientButton 
                 onClick={handleBecomeOrganizer} 
                 disabled={!orgDetails.name || isSubmitting}
@@ -165,8 +181,8 @@ function OrganizationSettings() {
       <GlassCard className="space-y-6">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="text-lg font-semibold text-white mb-1">Organization Settings</h3>
-            <p className="text-sm text-white/50">Manage your active organization profile.</p>
+            <h3 className="text-lg font-semibold text-foreground mb-1">Organization Settings</h3>
+            <p className="text-sm text-foreground/50">Manage your active organization profile.</p>
           </div>
           <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-status-success/20 text-status-success text-xs font-semibold">
             <CheckCircle2 size={14} /> Verified
@@ -175,8 +191,8 @@ function OrganizationSettings() {
         
         <div className="space-y-4">
            <div className="space-y-2">
-             <label className="text-sm font-medium text-white/70">Organization Name</label>
-             <input type="text" defaultValue="Demo University Club" className="w-full bg-background border border-border rounded-xl px-4 py-3 text-white focus:border-accent-start outline-none transition-colors" />
+             <label className="text-sm font-medium text-foreground/70">Organization Name</label>
+             <input type="text" defaultValue="Demo University Club" className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:border-accent-start outline-none transition-colors" />
            </div>
            <GradientButton className="mt-4">Update Profile</GradientButton>
         </div>
@@ -190,8 +206,8 @@ function NotificationSettings() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
       <GlassCard>
-         <h3 className="text-lg font-semibold text-white mb-4">Notification Preferences</h3>
-         <div className="text-sm text-white/50">Manage email and push notifications here.</div>
+         <h3 className="text-lg font-semibold text-foreground mb-4">Notification Preferences</h3>
+         <div className="text-sm text-foreground/50">Manage email and push notifications here.</div>
       </GlassCard>
     </motion.div>
   );
@@ -201,8 +217,8 @@ function SecuritySettings() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
       <GlassCard>
-         <h3 className="text-lg font-semibold text-white mb-4">Security & Sessions</h3>
-         <div className="text-sm text-white/50">Manage 2FA and active sessions here.</div>
+         <h3 className="text-lg font-semibold text-foreground mb-4">Security & Sessions</h3>
+         <div className="text-sm text-foreground/50">Manage 2FA and active sessions here.</div>
       </GlassCard>
     </motion.div>
   );
@@ -212,8 +228,8 @@ function AppearanceSettings() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
       <GlassCard>
-         <h3 className="text-lg font-semibold text-white mb-4">Appearance</h3>
-         <div className="text-sm text-white/50">Theme settings are locked to dark mode for Devixa.</div>
+         <h3 className="text-lg font-semibold text-foreground mb-4">Appearance</h3>
+         <div className="text-sm text-foreground/50">Theme settings are locked to dark mode for Devixa.</div>
       </GlassCard>
     </motion.div>
   );

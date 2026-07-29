@@ -5,6 +5,10 @@ export const registerSchema = Joi.object({
     'any.required': 'Hackathon ID is required',
     'string.length': 'Invalid Hackathon ObjectId',
   }),
+  githubProfile: Joi.string().allow(''),
+  linkedinProfile: Joi.string().allow(''),
+  experienceLevel: Joi.string().valid('BEGINNER', 'INTERMEDIATE', 'EXPERT', '').allow(''),
+  motivation: Joi.string().allow(''),
 });
 
 export const updateRegistrationStatusSchema = Joi.object({

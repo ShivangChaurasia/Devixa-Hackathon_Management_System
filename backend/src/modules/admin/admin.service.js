@@ -68,6 +68,50 @@ export class AdminService {
     return await userRepository.updateById(userId, { role });
   }
 
+  async listHackathons(pagination = {}) {
+    const { page = 1, limit = 20, search } = pagination;
+    const query = { deletedAt: null };
+    if (search) {
+      query.$or = [
+        { title: new RegExp(search, 'i') },
+        { tags: new RegExp(search, 'i') },
+      ];
+    }
+    return await hackathonRepository.find(query, {
+      limit: Number(limit),
+      skip: (page - 1) * limit,
+      populate: [{ path: 'organizerId', select: 'name email avatar' }],
+      sort: { createdAt: -1 }
+    });
+  }
+
+  async setHackathonStatus(hackathonId, status) {
+    const hackathon = await hackathonRepository.findById(hackathonId);
+    if (!hackathon) {
+      throw new NotFoundError('Hackathon not found');
+    }
+    return await hackathonRepository.updateById(hackathonId, { status });
+  }
+
+  async listSubmissions(pagination = {}) {
+    const { page = 1, limit = 20, search } = pagination;
+    const query = { deletedAt: null };
+    if (search) {
+      query.$or = [
+        { title: new RegExp(search, 'i') },
+      ];
+    }
+    return await submissionRepository.find(query, {
+      limit: Number(limit),
+      skip: (page - 1) * limit,
+      populate: [
+        { path: 'teamId', select: 'name' },
+        { path: 'hackathonId', select: 'title' }
+      ],
+      sort: { createdAt: -1 }
+    });
+  }
+
   async generateCertificate(hackathonId, userId) {
     const hackathon = await hackathonRepository.findById(hackathonId);
     if (!hackathon) {

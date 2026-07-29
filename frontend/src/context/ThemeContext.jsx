@@ -1,30 +1,62 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { apiClient } from '../services/apiClient';
 
 const ThemeContext = createContext({
-  theme: 'dark',
+  theme: 'system',
   toggleTheme: () => null,
   setTheme: () => null,
 });
 
 export const ThemeProvider = ({ children }) => {
-  // Default to system preference if no saved theme
   const getInitialTheme = () => {
-    const savedTheme = localStorage.getItem('devixa-theme');
-    if (savedTheme) {
-      return savedTheme;
-    }
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-    return 'light'; // Default fallback
+    return localStorage.getItem('devixa-theme') || 'system';
   };
 
   const [theme, setThemeState] = useState(getInitialTheme);
+  const [isInitializing, setIsInitializing] = useState(true);
 
-  const setTheme = (newTheme) => {
+  // Sync from backend on load
+  useEffect(() => {
+    const fetchTheme = async () => {
+      try {
+        if (localStorage.getItem('accessToken')) {
+          const res = await apiClient.get('/users/theme');
+          if (res.theme) {
+            setThemeState(res.theme);
+            localStorage.setItem('devixa-theme', res.theme);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to sync theme:', err);
+      } finally {
+        setIsInitializing(false);
+      }
+    };
+    fetchTheme();
+  }, []);
+
+  const setTheme = async (newTheme) => {
     setThemeState(newTheme);
     localStorage.setItem('devixa-theme', newTheme);
-    if (newTheme === 'dark') {
+    applyTheme(newTheme);
+
+    // Sync to backend
+    if (localStorage.getItem('accessToken')) {
+      try {
+        await apiClient.patch('/users/theme', { theme: newTheme });
+      } catch (err) {
+        console.error('Failed to update theme on server:', err);
+      }
+    }
+  };
+
+  const applyTheme = (t) => {
+    let resolvedTheme = t;
+    if (t === 'system') {
+      resolvedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    if (resolvedTheme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
     } else {
       document.documentElement.removeAttribute('data-theme');
@@ -35,27 +67,22 @@ export const ThemeProvider = ({ children }) => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
-  // Run on mount
+  // Watch theme state
   useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-    }
+    applyTheme(theme);
   }, [theme]);
 
-  // Listen for system theme changes if not overridden
+  // Watch system changes
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = (e) => {
-      if (!localStorage.getItem('devixa-theme')) {
-        setTheme(e.matches ? 'dark' : 'light');
+    const handleChange = () => {
+      if (theme === 'system') {
+        applyTheme('system');
       }
     };
-    
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
+  }, [theme]);
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>

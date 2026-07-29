@@ -24,6 +24,31 @@ const userSchema = new mongoose.Schema(
       minlength: [8, 'Password must be at least 8 characters'],
       select: false,
     },
+    username: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+      lowercase: true,
+    },
+    phone: {
+      type: String,
+      default: '',
+    },
+    provider: {
+      type: String,
+      enum: ['EMAIL', 'GOOGLE'],
+      default: 'EMAIL',
+    },
+    passwordCreated: {
+      type: Boolean,
+      default: false,
+    },
+    theme: {
+      type: String,
+      enum: ['light', 'dark', 'system'],
+      default: 'system',
+    },
     role: {
       type: String,
       enum: ['ADMIN', 'ORGANIZER', 'PARTICIPANT', 'JUDGE'],
@@ -57,9 +82,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    socialLinks: {
+      linkedin: { type: String, default: '' },
+      instagram: { type: String, default: '' },
+      website: { type: String, default: '' },
+      portfolio: { type: String, default: '' },
+      twitter: { type: String, default: '' },
+      youtube: { type: String, default: '' },
+    },
     isEmailVerified: {
       type: Boolean,
       default: true,
+    },
+    isOnboarded: {
+      type: Boolean,
+      default: false,
     },
     deletedAt: {
       type: Date,

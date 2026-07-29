@@ -31,9 +31,9 @@ export default function Teams() {
         <div className="flex justify-center p-20"><div className="w-8 h-8 border-4 border-accent-start/30 border-t-accent-start rounded-full animate-spin"></div></div>
       ) : teams.length === 0 ? (
         <GlassCard className="text-center py-20">
-          <Users className="mx-auto text-white/20 mb-4" size={48} />
-          <h3 className="text-xl font-semibold text-white mb-2">No teams yet</h3>
-          <p className="text-white/50 mb-6">Create a team to register for hackathons or accept an invitation.</p>
+          <Users className="mx-auto text-foreground/20 mb-4" size={48} />
+          <h3 className="text-xl font-semibold text-foreground mb-2">No teams yet</h3>
+          <p className="text-foreground/50 mb-6">Create a team to register for hackathons or accept an invitation.</p>
           <GradientButton onClick={() => setCreateModalOpen(true)}>Create Your First Team</GradientButton>
         </GlassCard>
       ) : (
@@ -49,19 +49,19 @@ export default function Teams() {
                 </span>
               </div>
               
-              <h3 className="text-xl font-semibold text-white mb-2">{team.name}</h3>
-              <p className="text-white/50 text-sm mb-6 flex items-center gap-2"><Link2 size={14}/> Connected to Hackathon {team.hackathon?.title || team.hackathonId}</p>
+              <h3 className="text-xl font-semibold text-foreground mb-2">{team.name}</h3>
+              <p className="text-foreground/50 text-sm mb-6 flex items-center gap-2"><Link2 size={14}/> Connected to Hackathon {team.hackathon?.title || team.hackathonId}</p>
 
               <div className="mt-auto border-t border-border pt-4">
-                <p className="text-xs text-white/50 uppercase tracking-wider mb-3">Members ({team.members?.length || 0}/4)</p>
+                <p className="text-xs text-foreground/50 uppercase tracking-wider mb-3">Members ({team.members?.length || 0}/4)</p>
                 <div className="flex flex-col gap-2">
                   {team.members?.map(member => (
-                    <div key={member.user?._id || member.id} className="flex items-center justify-between p-2 rounded-lg bg-white/5 border border-white/5">
+                    <div key={member.user?._id || member.id} className="flex items-center justify-between p-2 rounded-lg bg-foreground/5 border border-foreground/5">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs font-medium text-white">{(member.user?.name || member.name || 'U').charAt(0)}</div>
-                        <span className="text-sm text-white/80">{member.user?.name || member.name}</span>
+                        <div className="w-6 h-6 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-medium text-foreground">{(member.user?.name || member.name || 'U').charAt(0)}</div>
+                        <span className="text-sm text-foreground/80">{member.user?.name || member.name}</span>
                       </div>
-                      <span className="text-[10px] text-white/40 flex items-center gap-1">
+                      <span className="text-[10px] text-foreground/40 flex items-center gap-1">
                         {member.role === 'Leader' && <Shield size={10} className="text-accent-start" />}
                         {member.role}
                       </span>
@@ -70,7 +70,7 @@ export default function Teams() {
                 </div>
               </div>
               <div className="mt-6 flex gap-3">
-                 <button onClick={() => navigate(`/app/teams/${team._id || team.id}/manage`)} className="flex-1 py-2 rounded-xl bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors text-sm font-medium border border-border">Manage</button>
+                 <button onClick={() => navigate(`/app/teams/${team._id || team.id}/manage`)} className="flex-1 py-2 rounded-xl bg-foreground/5 text-foreground/70 hover:bg-foreground/10 hover:text-foreground transition-colors text-sm font-medium border border-border">Manage</button>
                  <button onClick={() => navigate(`/app/teams/${team._id || team.id}/submit`)} className="flex-1 py-2 rounded-xl bg-accent-start/20 text-accent-start hover:bg-accent-start/30 transition-colors text-sm font-medium border border-accent-start/30">Submit Project</button>
               </div>
             </GlassCard>
@@ -81,12 +81,12 @@ export default function Teams() {
       <Modal isOpen={isCreateModalOpen} onClose={() => setCreateModalOpen(false)} title="Create New Team">
         <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setCreateModalOpen(false); }}>
           <div>
-            <label className="block text-sm font-medium text-white/70 mb-1.5">Team Name</label>
-            <input type="text" required placeholder="e.g. CyberPunks" className="w-full bg-background border border-border rounded-xl px-4 py-3 text-white focus:border-accent-start outline-none transition-colors" />
+            <label className="block text-sm font-medium text-foreground/70 mb-1.5">Team Name</label>
+            <input type="text" required placeholder="e.g. CyberPunks" className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:border-accent-start outline-none transition-colors" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-white/70 mb-1.5">Select Hackathon</label>
-            <select className="w-full bg-background border border-border rounded-xl px-4 py-3 text-white focus:border-accent-start outline-none transition-colors appearance-none">
+            <label className="block text-sm font-medium text-foreground/70 mb-1.5">Select Hackathon</label>
+            <select className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:border-accent-start outline-none transition-colors appearance-none">
               <option value="h1">Global AI Summit Hackathon</option>
               <option value="h2">Web3 Builders Challenge</option>
             </select>

@@ -5,7 +5,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LandingPage from './pages/public/LandingPage';
 import PublicHackathons from './pages/public/PublicHackathons';
 import PublicHackathonDetails from './pages/public/PublicHackathonDetails';
+import PublicProfile from './pages/public/PublicProfile';
 import Auth from './pages/Auth';
+import Onboarding from './pages/Onboarding';
 
 // Authenticated Layout
 import AppLayout from './components/layout/AppLayout';
@@ -32,9 +34,12 @@ import AdminDashboard from './pages/roles/AdminDashboard';
 import './index.css';
 
 // Protected Route wrapper
-const ProtectedRoute = ({ user, children }) => {
+const ProtectedRoute = ({ user, children, requireOnboarding = true }) => {
   if (!user) {
     return <Navigate to="/auth" replace />;
+  }
+  if (requireOnboarding && user.isOnboarded === false) {
+    return <Navigate to="/app/onboarding" replace />;
   }
   return children;
 };
@@ -60,6 +65,7 @@ export default function App() {
         capabilities: ['PARTICIPANT'],
         activeView: 'PARTICIPANT',
         avatar: '',
+        isOnboarded: true,
       });
     }
     setLoading(false);
@@ -92,16 +98,28 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/hackathons" element={<PublicHackathons />} />
         <Route path="/hackathons/:id" element={<PublicHackathonDetails />} />
+        <Route path="/u/:username" element={<PublicProfile />} />
         <Route
           path="/auth"
           element={
-            user ? <Navigate to="/app/dashboard" replace /> : <Auth onAuthSuccess={handleAuthSuccess} />
+            user ? <Navigate to={user.isOnboarded === false ? "/app/onboarding" : (user.role === 'ADMIN' ? "/app/admin" : "/app/dashboard")} replace /> : <Auth onAuthSuccess={handleAuthSuccess} />
           }
         />
 
         {/* ============================================ */}
-        {/* AUTHENTICATED ROUTES (under /app)            */}
+        {/* PROTECTED ROUTES (Requires Auth)             */}
         {/* ============================================ */}
+        
+        {/* Onboarding Flow (Does not require isOnboarded) */}
+        <Route 
+          path="/app/onboarding" 
+          element={
+            <ProtectedRoute user={user} requireOnboarding={false}>
+              <Onboarding user={user} setUser={setUser} />
+            </ProtectedRoute>
+          } 
+        />
+
         <Route
           path="/app"
           element={
@@ -110,8 +128,8 @@ export default function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to="/app/dashboard" replace />} />
-          <Route path="dashboard" element={<DashboardOverview user={user} />} />
+          <Route index element={<Navigate to={user?.role === 'ADMIN' ? "/app/admin" : "/app/dashboard"} replace />} />
+          <Route path="dashboard" element={user?.role === 'ADMIN' ? <Navigate to="/app/admin" replace /> : <DashboardOverview user={user} />} />
 
           {/* Participant Routes */}
           <Route path="hackathons" element={<Hackathons />} />
