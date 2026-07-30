@@ -18,24 +18,27 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
-export const signInWithGoogle = async () => {
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    const user = result.user;
-    return {
-      success: true,
-      user: {
-        uid: user.uid,
-        email: user.email,
-        name: user.displayName || user.email.split('@')[0],
-        avatar: user.photoURL || '',
-      },
-    };
-  } catch (error) {
-    console.error("Firebase Google Auth failed:", error);
-    return {
-      success: false,
-      error: error.message,
-    };
-  }
+export const signInWithGoogle = () => {
+  return signInWithPopup(auth, googleProvider)
+    .then((result) => {
+      const user = result.user;
+      return {
+        success: true,
+        user: {
+          uid: user.uid,
+          email: user.email,
+          name: user.displayName || user.email.split('@')[0],
+          avatar: user.photoURL || '',
+        },
+      };
+    })
+    .catch((error) => {
+      console.error("Firebase Google Auth failed:", error);
+      return {
+        success: false,
+        error: error.code === 'auth/popup-blocked' 
+          ? 'Popup blocked by browser. Please allow popups for this site and try again.' 
+          : error.message,
+      };
+    });
 };
