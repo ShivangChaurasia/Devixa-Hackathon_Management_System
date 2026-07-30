@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 // Public Pages
-import LandingPage from './pages/public/LandingPage';
+import ShowcaseHome from './pages/public/ShowcaseHome';
 import PublicHackathons from './pages/public/PublicHackathons';
 import PublicHackathonDetails from './pages/public/PublicHackathonDetails';
 import PublicProfile from './pages/public/PublicProfile';
+import Features from './pages/public/Features';
+import About from './pages/public/About';
 import Auth from './pages/Auth';
 import Onboarding from './pages/Onboarding';
 
 // Authenticated Layout
 import AppLayout from './components/layout/AppLayout';
+import PublicLayout from './components/layout/PublicLayout';
 
 // Authenticated Pages
 import DashboardOverview from './pages/DashboardOverview';
@@ -31,12 +34,14 @@ import OrganizerDashboard from './pages/roles/OrganizerDashboard';
 import CreateHackathonWizard from './features/organizer/CreateHackathonWizard';
 import AdminDashboard from './pages/roles/AdminDashboard';
 
+import SkateboardBot from './components/ui/SkateboardBot';
 import './index.css';
 
 // Protected Route wrapper
 const ProtectedRoute = ({ user, children, requireOnboarding = true }) => {
+  const location = useLocation();
   if (!user) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
   if (requireOnboarding && user.isOnboarded === false) {
     return <Navigate to="/app/onboarding" replace />;
@@ -78,6 +83,8 @@ export default function App() {
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    sessionStorage.removeItem('devixa-chat-messages');
+    sessionStorage.removeItem('devixa-chat-open');
     setUser(null);
   };
 
@@ -91,16 +98,21 @@ export default function App() {
 
   return (
     <Router>
+      <SkateboardBot />
       <Routes>
         {/* ============================================ */}
         {/* PUBLIC ROUTES (Anonymous Access)             */}
         {/* ============================================ */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/hackathons" element={<PublicHackathons />} />
-        <Route path="/hackathons/:id" element={<PublicHackathonDetails />} />
-        <Route path="/u/:username" element={<PublicProfile />} />
+        <Route element={<PublicLayout user={user} onLogout={handleLogout} />}>
+          <Route path="/" element={<ShowcaseHome currentUser={user} setUser={setUser} onLogout={handleLogout} />} />
+          <Route path="/hackathons" element={<PublicHackathons />} />
+          <Route path="/hackathons/:id" element={<PublicHackathonDetails />} />
+          <Route path="/u/:username" element={<PublicProfile />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/about" element={<About />} />
+        </Route>
         <Route
-          path="/auth"
+          path="/login"
           element={
             user ? <Navigate to={user.isOnboarded === false ? "/app/onboarding" : (user.role === 'ADMIN' ? "/app/admin" : "/app/dashboard")} replace /> : <Auth onAuthSuccess={handleAuthSuccess} />
           }

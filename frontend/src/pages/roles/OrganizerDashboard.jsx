@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { apiClient } from '../../services/apiClient';
 import { useApi } from '../../hooks/useApi';
 import RegistrationReviewModal from '../../components/modals/RegistrationReviewModal';
+import { SkeletonCockpit } from '../../components/ui/Skeleton';
 
 export default function OrganizerDashboard() {
   const navigate = useNavigate();
@@ -22,6 +23,10 @@ export default function OrganizerDashboard() {
     fetchHackathons('/hackathons').catch(() => null); 
     fetchRegistrations('/registrations/organizer/all').catch(() => null);
   }, [fetchHackathons, fetchRegistrations]);
+
+  if (loading && regsLoading) {
+    return <SkeletonCockpit />;
+  }
 
   const allHackathons = Array.isArray(hackathonsRes) ? hackathonsRes : (hackathonsRes?.hackathons || []);
   const myHackathons = allHackathons;

@@ -7,6 +7,7 @@ import { CheckCircle2, Clock, GitBranch, Link as LinkIcon, FileText, Video, Send
 import { motion, AnimatePresence } from 'framer-motion';
 import { apiClient } from '../../services/apiClient';
 import { useApi } from '../../hooks/useApi';
+import { SkeletonCockpit } from '../../components/ui/Skeleton';
 
 export default function JudgeDashboard() {
   const [activeEvaluation, setActiveEvaluation] = useState(null);
@@ -19,6 +20,10 @@ export default function JudgeDashboard() {
     fetchInvites('/hackathons/judging/invites').catch(() => null);
     fetchEvals('/submissions').catch(() => null);
   }, [fetchInvites, fetchEvals]);
+
+  if (invitesLoading && evalsLoading) {
+    return <SkeletonCockpit />;
+  }
 
   const handleInviteAction = async (hackathonId, action) => {
     setActionLoading(hackathonId);

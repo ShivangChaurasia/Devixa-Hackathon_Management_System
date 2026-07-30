@@ -27,6 +27,11 @@ export class AIController {
     const health = aiService.getProviderHealth();
     return ApiResponse.success(res, 'AI Providers health status', health);
   });
+
+  chat = asyncHandler(async (req, res) => {
+    const result = await aiService.chat({ ...req.body, user: req.user });
+    return ApiResponse.success(res, 'Chat response generated', result);
+  });
 }
 
 export const aiController = new AIController();

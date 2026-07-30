@@ -121,6 +121,27 @@ export class AIService {
   getProviderHealth() {
     return aiHealthManager.getHealthSummary();
   }
+
+  async chat({ message, user }) {
+    const systemPrompt = user
+      ? "You are a helpful platform support AI assistant for authenticated users on the Devixa Hackathon Management Platform. Focus on helping them navigate their dashboard, manage hackathons, and resolve technical issues."
+      : "You are a dynamic sales and onboarding AI assistant for the Devixa Hackathon Management Platform. Your goal is to welcome guests, explain the platform's benefits for organizers, judges, and participants, and encourage them to sign up.";
+      
+    const response = await aiOrchestrator.execute({
+      task: TASK_TYPES.CHAT,
+      prompt: message,
+      systemPrompt,
+    });
+
+    return {
+      reply: response.text,
+      meta: {
+        provider: response.provider,
+        model: response.model,
+        requestId: response.requestId,
+      },
+    };
+  }
 }
 
 export const aiService = new AIService();

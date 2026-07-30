@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Calendar, MapPin, Users, Trophy, ChevronLeft, CheckCircle2, Clock, ArrowRight, FileText, ExternalLink, HelpCircle, Megaphone } from 'lucide-react';
-import PublicNavbar from '../../components/layout/PublicNavbar';
-import Footer from '../../components/layout/Footer';
 import { motion } from 'framer-motion';
 import { apiClient } from '../../services/apiClient';
 import { useApi } from '../../hooks/useApi';
@@ -21,23 +19,19 @@ export default function PublicHackathonDetails() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background text-foreground">
-        <PublicNavbar />
-        <div className="text-center py-20 text-foreground/50">Loading details...</div>
-        <Footer />
+      <div className="relative pt-32 pb-20">
+        <div className="text-center py-20 text-white/50 font-medium">Loading details...</div>
       </div>
     );
   }
 
   if (error || !hackathon) {
     return (
-      <div className="min-h-screen bg-background text-foreground">
-        <PublicNavbar />
+      <div className="relative pt-32 pb-20">
         <div className="text-center py-20">
-          <h2 className="text-2xl font-bold text-foreground mb-4">Hackathon not found</h2>
-          <button onClick={() => navigate('/hackathons')} className="text-accent-start hover:underline text-sm">Back to hackathons</button>
+          <h2 className="text-2xl font-bold text-white mb-4">Hackathon not found</h2>
+          <button onClick={() => navigate('/hackathons')} className="text-[#8B5CF6] hover:underline text-sm font-medium">Back to hackathons</button>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -57,8 +51,7 @@ export default function PublicHackathonDetails() {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <PublicNavbar />
+    <div className="relative pt-32 pb-20">
 
       <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-6">
         <button onClick={() => navigate('/hackathons')} className="flex items-center gap-2 text-foreground/50 hover:text-foreground transition-colors mb-6 text-sm font-medium">
@@ -115,7 +108,7 @@ export default function PublicHackathonDetails() {
             )}
           </div>
           <button
-            onClick={() => navigate('/auth')}
+            onClick={() => navigate('/login')}
             className="w-full md:w-auto px-10 py-3.5 rounded-full text-base font-medium text-foreground bg-gradient-to-r from-accent-start to-accent-end shadow-[0_4px_14px_0_rgba(99,102,241,0.39)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.23)] hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
           >
             Register Now <ArrowRight size={18} />
@@ -317,8 +310,6 @@ export default function PublicHackathonDetails() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

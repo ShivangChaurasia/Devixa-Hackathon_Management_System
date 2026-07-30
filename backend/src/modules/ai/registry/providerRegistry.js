@@ -5,6 +5,7 @@ export const TASK_TYPES = {
   SUMMARIZE: 'SUMMARIZE',
   EXPLAIN_CODE: 'EXPLAIN_CODE',
   JUDGE_ASSIST: 'JUDGE_ASSIST',
+  CHAT: 'CHAT',
 };
 
 // Priority list per task type. Router falls back in array order if a provider is unavailable.
@@ -15,4 +16,5 @@ export const providerRegistry = {
   [TASK_TYPES.ANALYZE_SUBMISSION]: ['gemini', 'groq', 'openrouter'],
   [TASK_TYPES.JUDGE_ASSIST]: ['gemini', 'groq', 'openrouter'],
   [TASK_TYPES.SUMMARIZE]: ['openrouter', 'groq', 'gemini'],
+  [TASK_TYPES.CHAT]: ['gemini', 'groq', 'openrouter'],
 };

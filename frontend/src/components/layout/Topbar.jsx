@@ -28,23 +28,26 @@ export default function Topbar({ user, setUser, onLogout }) {
   // Navigation links based on active view
   const navigationMap = {
     PARTICIPANT: [
+      { name: 'Home', path: '/' },
       { name: 'Dashboard', path: '/app/dashboard' },
       { name: 'Hackathons', path: '/app/hackathons' },
       { name: 'My Teams', path: '/app/teams' },
       { name: 'Certificates', path: '/app/certificates' },
     ],
     ORGANIZER: [
+      { name: 'Home', path: '/' },
       { name: 'Dashboard', path: '/app/organizer' },
       { name: 'Create Hackathon', path: '/app/organizer/create' },
     ],
     JUDGE: [
+      { name: 'Home', path: '/' },
       { name: 'Evaluations', path: '/app/judge' },
     ],
   };
 
   const userRole = user?.role?.toUpperCase();
   const navLinks = userRole === 'ADMIN' 
-    ? [{ name: 'Admin Panel', path: '/app/admin' }]
+    ? [{ name: 'Home', path: '/' }, { name: 'Admin Panel', path: '/app/admin' }]
     : (navigationMap[user?.activeView] || navigationMap[userRole] || navigationMap['PARTICIPANT']);
 
   // Only show switchable capabilities (exclude ADMIN)

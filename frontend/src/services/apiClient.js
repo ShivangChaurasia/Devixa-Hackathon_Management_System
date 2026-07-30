@@ -42,7 +42,7 @@ async function request(endpoint, options = {}) {
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
           localStorage.removeItem('user');
-          window.location.href = '/auth';
+          window.location.href = '/login';
           throw new ApiError(401, 'Session expired. Please login again.');
         }
       }

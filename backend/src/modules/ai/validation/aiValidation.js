@@ -26,3 +26,7 @@ export const analyzeSubmissionSchema = Joi.object({
 export const summarizeSchema = Joi.object({
   text: Joi.string().min(10).required(),
 });
+
+export const chatSchema = Joi.object({
+  message: Joi.string().required(),
+});

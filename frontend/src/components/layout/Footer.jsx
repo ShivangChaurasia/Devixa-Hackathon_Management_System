@@ -24,9 +24,9 @@ export default function Footer() {
             <h4 className="text-sm font-semibold text-foreground mb-4">Product</h4>
             <ul className="space-y-3">
               <li><NavLink to="/hackathons" className="text-sm text-foreground/50 hover:text-foreground transition-colors">Browse Hackathons</NavLink></li>
-              <li><NavLink to="/auth" className="text-sm text-foreground/50 hover:text-foreground transition-colors">For Organizers</NavLink></li>
-              <li><NavLink to="/auth" className="text-sm text-foreground/50 hover:text-foreground transition-colors">For Judges</NavLink></li>
-              <li><NavLink to="/auth" className="text-sm text-foreground/50 hover:text-foreground transition-colors">Pricing</NavLink></li>
+              <li><NavLink to="/login" className="text-sm text-foreground/50 hover:text-foreground transition-colors">For Organizers</NavLink></li>
+              <li><NavLink to="/login" className="text-sm text-foreground/50 hover:text-foreground transition-colors">For Judges</NavLink></li>
+              <li><NavLink to="/login" className="text-sm text-foreground/50 hover:text-foreground transition-colors">Pricing</NavLink></li>
             </ul>
           </div>
 

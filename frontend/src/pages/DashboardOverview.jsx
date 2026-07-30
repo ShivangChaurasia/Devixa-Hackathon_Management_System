@@ -7,6 +7,7 @@ import { Clock, Users, ArrowRight, Calendar, Trophy, Mail, CheckCircle2, AlertCi
 import { useOutletContext } from 'react-router-dom';
 import { apiClient } from '../services/apiClient';
 import { useApi } from '../hooks/useApi';
+import { SkeletonCockpit } from '../components/ui/Skeleton';
 
 export default function DashboardOverview({ user: propUser }) {
   const context = useOutletContext();
@@ -42,12 +43,7 @@ export default function DashboardOverview({ user: propUser }) {
   const loading = loadingH || loadingT || loadingN;
 
   if (loading) {
-    return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
-        <div className="w-12 h-12 border-4 border-accent-start/30 border-t-accent-start rounded-full animate-spin"></div>
-        <p className="text-foreground/50 font-medium tracking-wide animate-pulse">Loading your dashboard...</p>
-      </div>
-    );
+    return <SkeletonCockpit />;
   }
 
   const containerVariants = {

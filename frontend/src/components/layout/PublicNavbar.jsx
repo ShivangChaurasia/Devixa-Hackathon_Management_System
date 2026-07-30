@@ -38,16 +38,16 @@ export default function PublicNavbar() {
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-4">
           <button
-            onClick={() => navigate('/auth')}
-            className="px-4 py-2 rounded-xl text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors"
+            onClick={() => navigate('/login')}
+            className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors"
           >
             Sign In
           </button>
           <button
-            onClick={() => navigate('/auth')}
-            className="px-5 py-2 rounded-full text-sm font-medium text-foreground bg-gradient-to-r from-accent-start to-accent-end shadow-[0_4px_14px_0_rgba(99,102,241,0.39)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.23)] transition-all"
+            onClick={() => navigate('/login')}
+            className="px-5 py-2.5 rounded-full text-sm font-medium text-foreground bg-gradient-to-r from-accent-start to-accent-end shadow-md hover:shadow-lg hover:scale-105 transition-all"
           >
             Get Started
           </button>
@@ -79,8 +79,8 @@ export default function PublicNavbar() {
               </NavLink>
             ))}
             <div className="border-t border-border pt-4 mt-4 space-y-2">
-              <button onClick={() => { navigate('/auth'); setIsMobileOpen(false); }} className="w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-foreground/60 hover:text-foreground hover:bg-foreground/5">Sign In</button>
-              <button onClick={() => { navigate('/auth'); setIsMobileOpen(false); }} className="w-full px-4 py-3 rounded-xl text-sm font-medium text-foreground bg-gradient-to-r from-accent-start to-accent-end">Get Started</button>
+              <button onClick={() => { navigate('/login'); setIsMobileOpen(false); }} className="w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-foreground/60 hover:text-foreground hover:bg-foreground/5">Sign In</button>
+              <button onClick={() => { navigate('/login'); setIsMobileOpen(false); }} className="w-full px-4 py-3 rounded-xl text-sm font-medium text-foreground bg-gradient-to-r from-accent-start to-accent-end">Get Started</button>
             </div>
           </motion.div>
         )}

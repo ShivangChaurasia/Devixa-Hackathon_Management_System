@@ -4,6 +4,29 @@ import { userRepository } from './auth.repository.js';
 import { UnauthorizedError, ForbiddenError } from '../../common/errors/AppError.js';
 import { asyncHandler } from '../../common/middlewares/asyncHandler.js';
 
+export const optionalAuth = asyncHandler(async (req, res, next) => {
+  let token;
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies && req.cookies.accessToken) {
+    token = req.cookies.accessToken;
+  }
+
+  if (!token) {
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, config.jwt.secret);
+    const user = await userRepository.findActiveById(decoded.id);
+    if (user) {
+      req.user = user;
+    }
+  } catch (err) {}
+  
+  next();
+});
+
 export const protect = asyncHandler(async (req, res, next) => {
   let token;
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
