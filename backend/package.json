@@ -29,7 +29,6 @@
     "multer": "^2.2.0",
     "nodemon": "^3.1.14",
     "socket.io": "^4.8.3",
-    "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
