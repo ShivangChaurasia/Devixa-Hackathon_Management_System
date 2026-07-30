@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, useSpring } from 'framer-motion';
-import { signInWithGoogle } from '../firebase.js';
+import { signInWithGoogle, handleGoogleRedirectResult } from '../firebase.js';
 import { apiClient } from '../services/apiClient';
 import GradientButton from '../components/ui/GradientButton';
 
@@ -78,6 +78,32 @@ export default function Auth({ onAuthSuccess }) {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [mouseX, mouseY]);
 
+  useEffect(() => {
+    const checkRedirect = async () => {
+      const res = await handleGoogleRedirectResult();
+      if (res && res.success) {
+        setLoading(true);
+        try {
+          const data = await apiClient.post('/auth/google', {
+            email: res.user.email,
+            name: res.user.name,
+            avatar: res.user.avatar,
+            googleId: res.user.uid,
+            role: 'PARTICIPANT',
+          });
+          handleSuccess(data);
+        } catch (err) {
+          setError(err.message || 'Authentication failed');
+        } finally {
+          setLoading(false);
+        }
+      } else if (res && !res.success) {
+        setError(res.error || 'Google Redirect Authentication failed');
+      }
+    };
+    checkRedirect();
+  }, []);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (invalidFields.includes(e.target.name)) {
@@ -98,6 +124,9 @@ export default function Auth({ onAuthSuccess }) {
     setError('');
 
     const res = await signInWithGoogle();
+    if (res && res.redirecting) {
+      return;
+    }
     if (!res.success) {
       if (import.meta.env.DEV) {
         try {

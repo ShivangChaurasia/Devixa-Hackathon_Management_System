@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult } from "firebase/auth";
 
 // Devixa Web App Firebase Configuration
 const firebaseConfig = {
@@ -18,9 +18,45 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
-export const signInWithGoogle = () => {
-  return signInWithPopup(auth, googleProvider)
-    .then((result) => {
+export const signInWithGoogle = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+    return {
+      success: true,
+      user: {
+        uid: user.uid,
+        email: user.email,
+        name: user.displayName || user.email.split('@')[0],
+        avatar: user.photoURL || '',
+      },
+    };
+  } catch (error) {
+    console.error("Firebase Google Auth popup failed:", error);
+    if (error.code === 'auth/popup-blocked') {
+      console.log("Popup blocked. Falling back to signInWithRedirect...");
+      try {
+        await signInWithRedirect(auth, googleProvider);
+        return { redirecting: true };
+      } catch (redirectError) {
+        console.error("Firebase Google Auth redirect failed:", redirectError);
+        return {
+          success: false,
+          error: redirectError.message,
+        };
+      }
+    }
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+};
+
+export const handleGoogleRedirectResult = async () => {
+  try {
+    const result = await getRedirectResult(auth);
+    if (result && result.user) {
       const user = result.user;
       return {
         success: true,
@@ -31,14 +67,13 @@ export const signInWithGoogle = () => {
           avatar: user.photoURL || '',
         },
       };
-    })
-    .catch((error) => {
-      console.error("Firebase Google Auth failed:", error);
-      return {
-        success: false,
-        error: error.code === 'auth/popup-blocked' 
-          ? 'Popup blocked by browser. Please allow popups for this site and try again.' 
-          : error.message,
-      };
-    });
+    }
+    return null;
+  } catch (error) {
+    console.error("Firebase Redirect Result Error:", error);
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
 };
