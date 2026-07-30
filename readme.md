@@ -7,6 +7,9 @@
   <p>
     Built to eliminate friction, automate logistics, and empower builders.
   </p>
+  <p>
+    🌐 <strong>Live Demo:</strong> <a href="https://devixahacks.vercel.app">https://devixahacks.vercel.app</a>
+  </p>
 </div>
 
 <br />
