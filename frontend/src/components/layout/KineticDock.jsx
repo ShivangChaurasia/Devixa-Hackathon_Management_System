@@ -146,43 +146,38 @@ export default function KineticDock({ user, onLogout, showThemeToggle = true }) 
           
           <AnimatePresence mode="popLayout">
             {isAuthenticated ? (
-              <React.Fragment key="auth-actions">
-                <motion.div
-                  layout
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              <motion.div
+                key="auth-actions"
+                layout
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                className="flex items-center gap-1.5"
+              >
+                <NavLink
+                  to="/app/profile"
+                  className={({ isActive }) => `
+                    relative flex items-center justify-center w-9 h-9 rounded-full transition-all duration-300
+                    ${isActive ? 'bg-white/10 text-white' : 'text-white/50 hover:text-white hover:bg-white/5'}
+                  `}
                 >
-                  <NavLink
-                    to="/app/profile"
-                    className={({ isActive }) => `
-                      relative flex items-center justify-center w-9 h-9 rounded-full transition-all duration-300
-                      ${isActive ? 'bg-white/10 text-white' : 'text-white/50 hover:text-white hover:bg-white/5'}
-                    `}
-                  >
-                    {user?.avatar ? (
-                      <img src={user.avatar} alt="Profile" className="w-6 h-6 rounded-full object-cover" />
-                    ) : (
-                      <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#8B5CF6] to-[#06B6D4] flex items-center justify-center text-[10px] font-bold text-white">
-                        {user?.name?.charAt(0) || 'U'}
-                      </div>
-                    )}
-                  </NavLink>
-                </motion.div>
+                  {user?.avatar ? (
+                    <img src={user.avatar} alt="Profile" className="w-6 h-6 rounded-full object-cover" />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#8B5CF6] to-[#06B6D4] flex items-center justify-center text-[10px] font-bold text-white">
+                      {user?.name?.charAt(0) || 'U'}
+                    </div>
+                  )}
+                </NavLink>
                 
-                <motion.button
-                  layout
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                <button
                   onClick={onLogout}
                   className="flex items-center justify-center w-9 h-9 rounded-full text-white/50 hover:text-red-400 hover:bg-white/5 transition-all duration-300"
                 >
                   <LogOut size={15} />
-                </motion.button>
-              </React.Fragment>
+                </button>
+              </motion.div>
             ) : (
               <motion.div
                 key="guest-actions"
