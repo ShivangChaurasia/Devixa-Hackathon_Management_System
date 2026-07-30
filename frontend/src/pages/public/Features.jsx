@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
 import { Shield, Target, Users, Zap, Terminal, Rocket, CheckCircle2, Sliders } from 'lucide-react';
+import GlobalUserSearch from '../../components/ui/GlobalUserSearch';
 
 const KineticNodeMatrix = ({ activeRectRef }) => {
   const canvasRef = useRef(null);
@@ -200,7 +201,9 @@ export default function Features() {
     <div className="relative min-h-screen pt-32 pb-32 overflow-hidden bg-[#09090B]">
       <KineticNodeMatrix activeRectRef={activeRectRef} />
       
-      <div className="sticky top-20 z-50 flex justify-center mb-16 px-4">
+      <GlobalUserSearch isAuthenticated={false} />
+
+      <div className="sticky top-20 z-40 flex justify-center mb-16 px-4">
         <div className="flex items-center gap-2 p-1.5 rounded-full bg-white/[0.02] backdrop-blur-xl border border-white/[0.05] shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
           {sections.map(section => (
             <button

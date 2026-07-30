@@ -8,6 +8,7 @@ import { useOutletContext } from 'react-router-dom';
 import { apiClient } from '../services/apiClient';
 import { useApi } from '../hooks/useApi';
 import { SkeletonCockpit } from '../components/ui/Skeleton';
+import GlobalUserSearch from '../components/ui/GlobalUserSearch';
 
 export default function DashboardOverview({ user: propUser }) {
   const context = useOutletContext();
@@ -97,6 +98,8 @@ export default function DashboardOverview({ user: propUser }) {
           </div>
         </div>
       </motion.div>
+
+      <GlobalUserSearch isAuthenticated={true} />
 
       {/* 2. Premium Stat Overview */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6">
